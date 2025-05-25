@@ -1,0 +1,4 @@
+"lora_model.zip filter=lfs diff=lfs merge=lfs -text
+chroma_db/**/*.bin filter=lfs diff=lfs merge=lfs -text
+data/models/*.pkl filter=lfs diff=lfs merge=lfs -text
+data/models/*.h5" filter=lfs diff=lfs merge=lfs -text

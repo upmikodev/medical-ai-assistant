@@ -1,0 +1,1 @@
+{"patient_identifier":"carlos_perez_paco","classifications":[{"image_path":"pictures/carlos_perez_paco_1.jpg","result":{"error":"Expected state_dict to be dict-like, got <class 'torchvision.models.densenet.DenseNet'>."}}]}

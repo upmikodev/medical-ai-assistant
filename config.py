@@ -22,7 +22,7 @@ try:
     strands_model_nano = OpenAIModel(
         client_args={"api_key": os.getenv("OPENAI_API_KEY")},
         model_id="gpt-4.1-nano")
-    strands_model_default = OpenAIModel(
+    strands_model_mini = OpenAIModel(
         client_args={"api_key": os.getenv("OPENAI_API_KEY")},
         model_id="gpt-4.1-mini"
         # model_id="gpt-4.1-nano"

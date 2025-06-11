@@ -1,15 +1,1 @@
-{
-    "patient_identifier": "carlosperezpaco",
-    "classifications": [
-        {
-            "image_path": "pictures/carlos_perez_paco_1.jpg",
-            "result": {
-                "prediction": "Tumor",
-                "probabilities": {
-                    "No tumor": 0.08172643184661865,
-                    "Tumor": 0.9182735681533813
-                }
-            }
-        }
-    ]
-}
+{"patient_identifier":"carlos_perez_paco","classifications":[{"image_path":"pictures/carlos_perez_paco_1_flair.nii","result":{"error":"local variable 'img_t1ce' referenced before assignment"}}]}

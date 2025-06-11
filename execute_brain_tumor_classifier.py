@@ -3,7 +3,8 @@ import json
 import logging
 import re
 from PIL import Image
-
+import cv2, numpy as np
+import nibabel as nib
 import torch
 import torch.nn as nn
 from torchvision import models, transforms
@@ -16,12 +17,8 @@ logger = logging.getLogger(__name__)
 
 DEVICE        = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASS_NAMES   = ["No tumor", "Tumor"]
-MODEL_PATH    = "models/brain_tumor_classifier.pkl"
-TRANSFORM_PREDICT = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    transforms.Normalize([0.5], [0.5]),
-])
+MODEL_PATH    = "models/brain_tumor_classifier_v3.pkl"
+
 
 # ——— Función de carga del modelo ———
 def load_model(model_path: str):
@@ -66,6 +63,28 @@ def load_model(model_path: str):
     logger.info(f"Model state_dict loaded successfully from {model_path}")
     return model
 
+def preprocess_slice(flair_slice, t1ce_slice=None):
+    """
+    Recibe dos arrays 2-D (192×192, 240×240, …) y devuelve
+    un tensor (2,128,128) en rango 0-1 listo para el modelo.
+
+    · Si t1ce_slice es None, duplica flair → 2 canales.
+    """
+    # --- resize a 128×128 ---
+    flair128 = cv2.resize(flair_slice, (128, 128),
+                          interpolation=cv2.INTER_LINEAR).astype(np.float32)
+    flair128 /= flair128.max() if flair128.max() > 0 else 1.  # 0-1
+
+    if t1ce_slice is None:
+        t1ce128 = flair128.copy()            # duplicar canal
+    else:
+        t1ce128 = cv2.resize(t1ce_slice, (128, 128),
+                             interpolation=cv2.INTER_LINEAR).astype(np.float32)
+        t1ce128 /= t1ce128.max() if t1ce128.max() > 0 else 1.
+
+    x = np.stack([flair128, t1ce128], axis=0)    # (2,128,128)
+    return torch.from_numpy(x).float()           # tensor
+
 # ——— Herramienta de clasificación ———
 @tool
 def classify_tumor_from_image(image_path: str) -> str:
@@ -81,12 +100,22 @@ def classify_tumor_from_image(image_path: str) -> str:
 
     try:
         model = load_model(MODEL_PATH)
-        img = Image.open(image_path).convert("RGB")
-        tensor = TRANSFORM_PREDICT(img).unsqueeze(0).to(DEVICE)
+        flair_path = image_path
+        flair_vol  = nib.load(flair_path).get_fdata()    # (H,W,S)
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        k = flair_vol.shape[2] // 2          # slice central
+        flair_slice = flair_vol[:, :, k]
+        # Si NO tienes T1CE, pasa None → duplicaremos el canal
+        x = preprocess_slice(flair_slice, t1ce_slice=None)
+        # añadir dimensión batch y mover a device
+        x = x.unsqueeze(0).to(device)        # (1,2,128,128)
+
+
+
 
         with torch.no_grad():
-            logits = model(tensor)
-            probs  = torch.softmax(logits, dim=1)[0]
+            logits = model(x)
+            probs  = torch.softmax(logits, dim=1)[0].cpu().numpy()
             idx    = probs.argmax().item()
 
         result = {

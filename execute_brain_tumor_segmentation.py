@@ -142,23 +142,23 @@ def preprocess_nifti_for_prediction(image_path_t1ce,image_path_flair, seg_path=N
 
 # ——— Herramienta de clasificación ———
 @tool
-def segmenter_tumor_from_image(image_path: str) -> str:
+def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
     """
     Clasifica una única imagen. NO BUSCA ficheros: espera recibir
     la ruta exacta al archivo de imagen.
     """
-    logger.info(f"Request to classify: {image_path}")
-    if not os.path.isfile(image_path):
-        err = f"Image file not found: {image_path}"
-        logger.error(err)
-        return json.dumps({"error": err})
-
+    for p in (flair_path, t1ce_path):
+        if not os.path.isfile(p):
+            err = f"Image file not found: {p}"
+            logger.error(err)
+            return json.dumps({"error": err})
     try:
         model = load_model(MODEL_PATH)
-        image_flair_path = image_path
+        
         processed_volume, seg_truth_volume_categorical = preprocess_nifti_for_prediction(
             #image_t1ce_path,
-            image_flair_path,
+            image_path_t1ce=t1ce_path,
+            image_path_flair=flair_path,
             #seg_path=segmentation_truth_path,
             target_size=(IMG_SIZE, IMG_SIZE)
         )
@@ -183,13 +183,17 @@ def segmenter_tumor_from_image(image_path: str) -> str:
         plt.legend(handles=legend_elements, loc='lower left', bbox_to_anchor=(0.0, -0.3))
         plt.axis('off')
 
-        save_name = f"Resultado_segmentacion_{image_path}.png"
-        plt.imsave(save_name, predicted_mask_categorical, cmap="jet")
+        png_name = (
+            "segmentations/Resultado_segmentacion_"
+            + os.path.basename(flair_path).replace("_flair.nii", ".png")
+        )
+        os.makedirs("segmentations", exist_ok=True)
+        plt.imsave(png_name, predicted_mask_categorical, cmap="jet")
 
 
-        logger.info(f"Segmentación guardada como: {save_name}")
-        return json.dumps({"saved_mask": save_name})
+        logger.info(f"Segmentación guardada como: {png_name}")
+        return json.dumps({"saved_mask": png_name})
 
     except Exception as e:
-        logger.error(f"Classification error: {e}", exc_info=True)
+        logger.error(f"Segmentación error: {e}", exc_info=True)
         return json.dumps({"error": str(e)})

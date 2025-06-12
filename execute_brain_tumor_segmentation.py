@@ -183,14 +183,18 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
         plt.legend(handles=legend_elements, loc='lower left', bbox_to_anchor=(0.0, -0.3))
         plt.axis('off')
 
+        rgba = plt.cm.get_cmap("jet")(predicted_mask_categorical / 3.0)
+
+        # 2. Conviértelo a RGB uint8 (descarta alfa)
+        rgb  = (rgba[...,:3] * 255).astype(np.uint8)        # (H,W,3) uint8
+
+        # 3. Asegura carpeta y guarda con Pillow
+        os.makedirs("segmentations", exist_ok=True)
         png_name = (
             "segmentations/Resultado_segmentacion_"
             + os.path.basename(flair_path).replace("_flair.nii", ".png")
         )
-        os.makedirs("segmentations", exist_ok=True)
-        plt.imsave(png_name, predicted_mask_categorical, cmap="jet")
-
-
+        Image.fromarray(rgb).save(png_name, format="PNG")
         logger.info(f"Segmentación guardada como: {png_name}")
         return json.dumps({"saved_mask": png_name})
 

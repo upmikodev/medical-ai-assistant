@@ -87,47 +87,48 @@ def preprocess_slice(flair_slice, t1ce_slice=None):
 
 # ——— Herramienta de clasificación ———
 @tool
-def classify_tumor_from_image(image_path: str) -> str:
+def classify_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
     """
-    Clasifica una única imagen. NO BUSCA ficheros: espera recibir
-    la ruta exacta al archivo de imagen.
+    Estima la probabilidad de tumor usando un par FLAIR + T1CE.
+    Recibe las rutas completas a los dos archivos .nii.
+    Devuelve JSON: { "prediction": "...", "probabilities": {...} } o "error".
     """
-    logger.info(f"Request to classify: {image_path}")
-    if not os.path.isfile(image_path):
-        err = f"Image file not found: {image_path}"
-        logger.error(err)
-        return json.dumps({"error": err})
+    # 1. Comprobaciones
+    for p in (flair_path, t1ce_path):
+        if not os.path.isfile(p):
+            err = f"Image file not found: {p}"
+            logger.error(err)
+            return json.dumps({"error": err})
 
     try:
+        # 2. Cargar modelo (DenseNet-121 con 2 canales)
         model = load_model(MODEL_PATH)
-        flair_path = image_path
-        flair_vol  = nib.load(flair_path).get_fdata()    # (H,W,S)
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        k = flair_vol.shape[2] // 2          # slice central
+
+        # 3. Volúmenes y slice central
+        flair_vol = nib.load(flair_path).get_fdata()
+        t1ce_vol  = nib.load(t1ce_path ).get_fdata()
+        k         = flair_vol.shape[2] // 2
+
         flair_slice = flair_vol[:, :, k]
-        # Si NO tienes T1CE, pasa None → duplicaremos el canal
-        x = preprocess_slice(flair_slice, t1ce_slice=None)
-        # añadir dimensión batch y mover a device
-        x = x.unsqueeze(0).to(device)        # (1,2,128,128)
+        t1ce_slice  = t1ce_vol [:, :, k]
 
+        # 4. Pre-proceso → (1,2,128,128)
+        x = preprocess_slice(flair_slice, t1ce_slice).unsqueeze(0).to(DEVICE)
 
-
-
+        # 5. Inferencia
         with torch.no_grad():
-            logits = model(x)
-            probs  = torch.softmax(logits, dim=1)[0].cpu().numpy()
-            idx    = probs.argmax().item()
+            probs = torch.softmax(model(x), dim=1)[0].cpu().numpy()
+        idx = int(probs.argmax())
 
         result = {
             "prediction": CLASS_NAMES[idx],
             "probabilities": {
-                CLASS_NAMES[i]: probs[i].item()
-                for i in range(len(CLASS_NAMES))
+                CLASS_NAMES[i]: float(probs[i]) for i in range(len(CLASS_NAMES))
             }
         }
-        logger.info(f"Result for {image_path}: {result}")
+        logger.info(f"Result for {os.path.basename(flair_path)}: {result}")
         return json.dumps(result)
 
     except Exception as e:
-        logger.error(f"Classification error: {e}", exc_info=True)
+        logger.error("Classification error", exc_info=True)
         return json.dumps({"error": str(e)})

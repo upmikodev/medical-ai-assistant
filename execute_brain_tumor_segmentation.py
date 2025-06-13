@@ -6,7 +6,6 @@ from PIL import Image
 import cv2, numpy as np
 import nibabel as nib
 import torch
-import torch.nn as nn
 from torchvision import models, transforms
 import tensorflow as tf
 from strands_tools import tool

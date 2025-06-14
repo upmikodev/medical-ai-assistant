@@ -67,7 +67,10 @@ def load_model(model_path: str):
     return model
 
 # ——— Herramienta de clasificación ———
-@tool
+@tool(
+    name="classify_tumor_from_image",
+    description="Clasifica una imagen de un cerebro como 'Tumor' o 'No tumor'.",
+)
 def classify_tumor_from_image(image_path: str) -> str:
     """
     Clasifica una única imagen. NO BUSCA ficheros: espera recibir

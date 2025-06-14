@@ -93,7 +93,10 @@ def find_patient_images_tool(patient_identifier: str, image_directory: str = "pi
         logger.error(f"Tool: Error in find_patient_images_tool for '{patient_identifier}': {e}", exc_info=True)
         return json.dumps({"error": f"Error finding images for '{patient_identifier}': {str(e)}"})
 
-@tool
+@tool(
+    name="list_files_in_dir",
+    description="Lists files in a local directory"
+)
 def list_files_in_dir(directory: str) -> str:
     """
     Lists files in a local directory, optionally filtering by prefix.
@@ -117,7 +120,10 @@ def list_files_in_dir(directory: str) -> str:
         logger.error(f"Tool: Error listing files in '{directory}': {e}")
         return json.dumps({"error": f"Error listing files in '{directory}': {str(e)}"})
 
-@tool
+@tool(
+    name="read_file_from_local",
+    description="Reads the content of a local text file"
+)
 def read_file_from_local(path: str, encoding: str = 'utf-8') -> str:
     """
     Reads the content of a local text file.
@@ -136,7 +142,10 @@ def read_file_from_local(path: str, encoding: str = 'utf-8') -> str:
         logger.error(f"Tool: Error reading file '{path}': {e}")
         return json.dumps({"error": f"Error reading file '{path}': {str(e)}"})
 
-@tool
+@tool(
+    name="write_file_to_local",
+    description="Writes text content to a local file"
+)
 def write_file_to_local(path: str, content: str) -> str:
     """
     Writes text content to a local file.
@@ -156,7 +165,10 @@ def write_file_to_local(path: str, content: str) -> str:
         logger.error(f"Tool: Error writing file '{path}': {e}")
         return json.dumps({"error": f"Error writing file '{path}': {str(e)}"})
 
-@tool
+@tool(
+    name="classify_single_image_tool",
+    description="Classifies a single image file for brain tumor detection using the classifier model."
+)
 def classify_single_image_tool(image_path: str) -> str:
     """Invokes the brain tumor classification logic for a single image file.
     Args:

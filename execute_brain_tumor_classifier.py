@@ -93,8 +93,13 @@ def preprocess_slice(flair_slice, t1ce_slice=None):
 def classify_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
     """
     Estima la probabilidad de tumor usando un par FLAIR + T1CE.
-    Recibe las rutas completas a los dos archivos .nii.
-    Devuelve JSON: { "prediction": "...", "probabilities": {...} } o "error".
+
+    Args:
+        flair_path (str): Ruta al archivo .nii de la imagen FLAIR.
+        t1ce_path (str): Ruta al archivo .nii de la imagen T1CE.
+
+    Returns:
+        str: Resultado de la clasificación en formato JSON.
     """
     # 1. Comprobaciones
     for p in (flair_path, t1ce_path):

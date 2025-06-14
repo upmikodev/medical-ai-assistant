@@ -140,11 +140,21 @@ def preprocess_nifti_for_prediction(image_path_t1ce,image_path_flair, seg_path=N
     return resized_volume, seg_volume_categorical         # tensor
 
 # ——— Herramienta de clasificación ———
-@tool
+@tool(
+    name="segmenter_tumor_from_image",
+    description="Segmenta un tumor cerebral a partir de imágenes FLAIR y T1CE.",
+)
 def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
     """
     Clasifica una única imagen. NO BUSCA ficheros: espera recibir
     la ruta exacta al archivo de imagen.
+
+    Args:
+        flair_path (str): Ruta al archivo .nii de la imagen FLAIR.
+        t1ce_path (str): Ruta al archivo .nii de la imagen T1CE.
+
+    Returns:
+        str: Resultado de la segmentación en formato JSON.
     """
     for p in (flair_path, t1ce_path):
         if not os.path.isfile(p):

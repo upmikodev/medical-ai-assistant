@@ -8,14 +8,14 @@ from elevenlabs.conversational_ai.default_audio_interface import DefaultAudioInt
 
 def main():
     AGENT_ID=os.environ.get('AGENT_ID')
-    API_KEY=os.environ.get('ELEVEN_API')
+    API_KEY=os.environ.get('ELEVEN_API_KEY')
 
     if not AGENT_ID:
         sys.stderr.write("AGENT_ID environment variable must be set\n")
         sys.exit(1)
     
     if not API_KEY:
-        sys.stderr.write("ELEVENLABS_API_KEY not set, assuming the agent is public\n")
+        sys.stderr.write("ELEVEN_API_KEY not set, assuming the agent is public\n")
 
     client = ElevenLabs(api_key=API_KEY)
     conversation = Conversation(

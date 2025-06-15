@@ -1,10 +1,1 @@
-{
-    "patient_identifier": "carlos_pérez_paco",
-    "scans": [
-        {
-            "scan_id": "carlos_perez_paco_1",
-            "flair_path": "pictures/carlos_perez_paco_1_flair.nii",
-            "t1ce_path": "pictures/carlos_perez_paco_1_t1ce.nii"
-        }
-    ]
-}
+{"patient_identifier":"carlos_perez_paco","scans":[{"scan_id":"carlos_perez_paco_1","flair_path":"pictures/carlos_perez_paco_1_flair.nii","t1ce_path":"pictures/carlos_perez_paco_1_t1ce.nii"}]}

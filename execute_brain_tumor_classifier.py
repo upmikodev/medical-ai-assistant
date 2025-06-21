@@ -1,13 +1,12 @@
 import os
 import json
 import logging
-import re
-from PIL import Image
-import cv2, numpy as np
+import cv2
+import numpy as np
 import nibabel as nib
 import torch
 import torch.nn as nn
-from torchvision import models, transforms
+from torchvision import models
 
 from strands_tools import tool
 

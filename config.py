@@ -24,9 +24,9 @@ try:
         model_id="gpt-4.1-nano")
     strands_model_mini = OpenAIModel(
         client_args={"api_key": os.getenv("OPENAI_API_KEY")},
-        model_id="gpt-4.1-mini"
+        model_id="gpt-4.1-mini",
         # model_id="gpt-4.1-nano"
-        )
+    )
     strands_model_planner_orchestrator = OpenAIModel(
         client_args={"api_key": os.getenv("OPENAI_API_KEY")},
         model_id="gpt-4.1-mini")
@@ -50,7 +50,7 @@ except Exception as e:
     print("This usually means an issue with your OPENAI_API_KEY (not found, invalid, expired, insufficient quota/permissions for the specified models) or the model names.")
     print("Please double-check your .env file for OPENAI_API_KEY and ensure the models (gpt-4.1-nano, gpt-4.1-mini) are accessible with your key.")
     strands_model_nano = None
-    strands_model_default = None
+    strands_model_mini = None
     strands_model_planner_orchestrator = None
 
 # Asyncio policy for Windows if needed
@@ -67,10 +67,10 @@ if __name__ == "__main__":
     else:
         print("OPENAI_API_KEY is NOT set.")
 
-    if strands_model_default:
-        print(f"Default OpenAIModel model_id: {strands_model_default.config['model_id']}")
+    if strands_model_mini:
+        print(f"Default OpenAIModel model_id: {strands_model_mini.config['model_id']}")
     else:
-        print("Default OpenAIModel (strands_model_default) is None.")
+        print("Default OpenAIModel (strands_model_mini) is None.")
 
     if strands_model_planner_orchestrator:
         print(f"Planner/Orchestrator OpenAIModel model_id: {strands_model_planner_orchestrator.config['model_id']}")

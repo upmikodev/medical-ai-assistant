@@ -1,4 +1,1 @@
-{
-  "riesgo": "alto",
-  "justificacion_triaje": "Paciente con diagnóstico de accidente cerebrovascular isquémico (infarto cerebral no especificado I63.9) con síntomas agudos de debilidad súbita en hemicuerpo derecho y dificultad en habla y comprensión, además de factores de riesgo cardiovascular importantes como hipertensión y tabaquismo, junto con evidencia de lesión hipodensa en región parietal izquierda y demora en la perfusión de la arteria cerebral media. Estos hallazgos indican un riesgo alto que requiere evaluación médica urgente."
-}
+{"riesgo": "alto", "justificacion_triaje": "Paciente con infarto cerebral isquémico en región parietal izquierda, con déficit neurológico significativo (debilidad hemicuerpo derecho, dificultad en el habla y comprensión). Factores de riesgo presentes (hipertensión y tabaquismo) que pueden agravar el cuadro. Indicación de trombólisis intravenosa y control estricto señalan necesidad de atención urgente."}

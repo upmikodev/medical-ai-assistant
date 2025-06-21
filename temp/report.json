@@ -1,0 +1,31 @@
+{
+  "paciente_id": "lucia_rodriguez",
+  "nombre": "Lucía Rodríguez",
+  "fecha": "2025-06-12",
+  "motivo_consulta": "Accidente cerebrovascular isquemico",
+
+  "tumor_prob": 0.948,
+  "tumor_resultado": "tumor",
+  "comentarios_clasificador": "Probabilidad tumor alta según clasificación IA.",
+
+  "zona_afectada": "región parietal izquierda",
+  "volumen_cc": null,
+  "nombre_archivo_segmentado": "segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
+
+  "resumen_historial": "Paciente con antecedentes de hipertensión y tabaquismo. Presenta debilidad súbita en el hemicuerpo derecho, dificultad en el habla y comprensión disminuida. Diagnóstico principal: Infarto cerebral no especificado (I63.9). Recomendaciones incluyen trombólisis intravenosa, control estricto de la presión arterial y rehabilitación neurológica temprana.",
+
+  "riesgo": "alto",
+  "justificacion_triaje": "Paciente con infarto cerebral isquémico en región parietal izquierda, con déficit neurológico significativo (debilidad hemicuerpo derecho, dificultad en el habla y comprensión). Factores de riesgo presentes (hipertensión y tabaquismo) que pueden agravar el cuadro. Indicación de trombólisis intravenosa y control estricto señalan necesidad de atención urgente.",
+
+  "comentario_final_sobre_el_caso": "Caso complejo con alta probabilidad de tumor según IA, aunque diagnóstico principal indica infarto cerebral. Requiere atención urgente y seguimiento clínico multidisciplinario.",
+
+  "scans": [
+    {
+      "scan_id": "lucia_rodriguez_1",
+      "flair_path": "pictures/lucia_rodriguez_1_flair.nii",
+      "t1ce_path": "pictures/lucia_rodriguez_1_t1ce.nii",
+      "p_tumor": 0.948,
+      "mask_file": "segmentations/Resultado_segmentacion_lucia_rodriguez_1.png"
+    }
+  ]
+}

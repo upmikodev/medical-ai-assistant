@@ -6,18 +6,18 @@
 
   "tumor_prob": 0.948,
   "tumor_resultado": "tumor",
-  "comentarios_clasificador": "Probabilidad tumor alta según clasificación IA.",
+  "comentarios_clasificador": "Probabilidad alta (0.948) de tumor detectada por el clasificador automático.",
 
   "zona_afectada": "región parietal izquierda",
   "volumen_cc": null,
   "nombre_archivo_segmentado": "segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
 
-  "resumen_historial": "Paciente con antecedentes de hipertensión y tabaquismo. Presenta debilidad súbita en el hemicuerpo derecho, dificultad en el habla y comprensión disminuida. Diagnóstico principal: Infarto cerebral no especificado (I63.9). Recomendaciones incluyen trombólisis intravenosa, control estricto de la presión arterial y rehabilitación neurológica temprana.",
+  "resumen_historial": "- Debilidad súbita en el hemicuerpo derecho.\n- Dificultad en el habla y comprensión disminuida.\n- Factores de riesgo: hipertensión y tabaquismo.\n- Lesión hipodensa en la región parietal izquierda.\n- Demora en perfusión de la arteria cerebral media.\n- Diagnóstico: I63.9 - Infarto cerebral no especificado.\n- Recomendaciones: Iniciar trombólisis intravenosa, control estricto de la presión arterial y rehabilitación neurológica temprana.",
 
   "riesgo": "alto",
-  "justificacion_triaje": "Paciente con infarto cerebral isquémico en región parietal izquierda, con déficit neurológico significativo (debilidad hemicuerpo derecho, dificultad en el habla y comprensión). Factores de riesgo presentes (hipertensión y tabaquismo) que pueden agravar el cuadro. Indicación de trombólisis intravenosa y control estricto señalan necesidad de atención urgente.",
+  "justificacion_triaje": "Paciente de 45 años con infarto cerebral no especificado (I63.9) en región parietal izquierda, con síntomas neurológicos agudos como debilidad súbita en hemicuerpo derecho y dificultad en el habla. Factores de riesgo significativos: hipertensión y tabaquismo. Se recomienda trombólisis intravenosa y control estricto, lo que indica urgencia máxima para evitar daño cerebral irreversible.",
 
-  "comentario_final_sobre_el_caso": "Caso complejo con alta probabilidad de tumor según IA, aunque diagnóstico principal indica infarto cerebral. Requiere atención urgente y seguimiento clínico multidisciplinario.",
+  "comentario_final_sobre_el_caso": "Caso con diagnóstico principal de infarto cerebral isquémico, acompañado de alta probabilidad de tumor según clasificación automática. Se recomienda atención médica urgente y seguimiento detallado.",
 
   "scans": [
     {

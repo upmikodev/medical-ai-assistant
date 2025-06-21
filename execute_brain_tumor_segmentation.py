@@ -1,12 +1,11 @@
 import os
 import json
 import logging
-import re
 from PIL import Image
-import cv2, numpy as np
+import cv2
+import numpy as np
 import nibabel as nib
 import torch
-from torchvision import models, transforms
 import tensorflow as tf
 from strands_tools import tool
 from tensorflow.keras.models import load_model # <--- Esta es la clave

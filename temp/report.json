@@ -6,18 +6,18 @@
 
   "tumor_prob": 0.948,
   "tumor_resultado": "tumor",
-  "comentarios_clasificador": "Probabilidad alta (0.948) de tumor detectada por el clasificador automático.",
+  "comentarios_clasificador": "Probabilidad alta de tumor según clasificación automática.",
 
-  "zona_afectada": "región parietal izquierda",
+  "zona_afectada": "NO DISPONIBLE",
   "volumen_cc": null,
-  "nombre_archivo_segmentado": "segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
+  "nombre_archivo_segmentado": "NO DISPONIBLE",
 
-  "resumen_historial": "- Debilidad súbita en el hemicuerpo derecho.\n- Dificultad en el habla y comprensión disminuida.\n- Factores de riesgo: hipertensión y tabaquismo.\n- Lesión hipodensa en la región parietal izquierda.\n- Demora en perfusión de la arteria cerebral media.\n- Diagnóstico: I63.9 - Infarto cerebral no especificado.\n- Recomendaciones: Iniciar trombólisis intravenosa, control estricto de la presión arterial y rehabilitación neurológica temprana.",
+  "resumen_historial": "- Debilidad súbita en el hemicuerpo derecho.\n- Dificultad en el habla y comprensión disminuida.\n- Factores de riesgo: hipertensión y tabaquismo.\n- Lesión hipodensa en la región parietal izquierda.\n- Demora en perfusión de la arteria cerebral media.\n- Diagnóstico: I63.9 - Infarto cerebral no especificado.\n- Recomendaciones: iniciar trombólisis intravenosa, control estricto de la presión arterial y rehabilitación neurológica temprana.",
 
   "riesgo": "alto",
-  "justificacion_triaje": "Paciente de 45 años con infarto cerebral no especificado (I63.9) en región parietal izquierda, con síntomas neurológicos agudos como debilidad súbita en hemicuerpo derecho y dificultad en el habla. Factores de riesgo significativos: hipertensión y tabaquismo. Se recomienda trombólisis intravenosa y control estricto, lo que indica urgencia máxima para evitar daño cerebral irreversible.",
+  "justificacion_triaje": "Paciente con diagnóstico de infarto cerebral (I63.9) y síntomas agudos de debilidad en hemicuerpo derecho y dificultad del habla, con factores de riesgo importantes como hipertensión y tabaquismo. La lesión hipodensa en región parietal izquierda y demora en perfusión arterial indican compromiso isquémico crítico que requiere atención médica urgente.",
 
-  "comentario_final_sobre_el_caso": "Caso con diagnóstico principal de infarto cerebral isquémico, acompañado de alta probabilidad de tumor según clasificación automática. Se recomienda atención médica urgente y seguimiento detallado.",
+  "comentario_final_sobre_el_caso": "Caso clínico compatible con infarto cerebral isquémico con alta prioridad médica. No hay imagen de tumor segmentada.",
 
   "scans": [
     {
@@ -25,7 +25,7 @@
       "flair_path": "pictures/lucia_rodriguez_1_flair.nii",
       "t1ce_path": "pictures/lucia_rodriguez_1_t1ce.nii",
       "p_tumor": 0.948,
-      "mask_file": "segmentations/Resultado_segmentacion_lucia_rodriguez_1.png"
+      "mask_file": "NO DISPONIBLE"
     }
   ]
 }

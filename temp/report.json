@@ -2,22 +2,22 @@
   "paciente_id": "lucia_rodriguez",
   "nombre": "Lucía Rodríguez",
   "fecha": "2025-06-12",
-  "motivo_consulta": "Accidente cerebrovascular isquemico",
+  "motivo_consulta": "Accidente cerebrovascular isquémico",
 
   "tumor_prob": 0.948,
   "tumor_resultado": "tumor",
-  "comentarios_clasificador": "Probabilidad alta de tumor según clasificación automática.",
+  "comentarios_clasificador": "Probabilidad alta de tumor detectado según clasificador IA.",
 
   "zona_afectada": "NO DISPONIBLE",
   "volumen_cc": null,
-  "nombre_archivo_segmentado": "NO DISPONIBLE",
+  "nombre_archivo_segmentado": "segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
 
-  "resumen_historial": "- Debilidad súbita en el hemicuerpo derecho.\n- Dificultad en el habla y comprensión disminuida.\n- Factores de riesgo: hipertensión y tabaquismo.\n- Lesión hipodensa en la región parietal izquierda.\n- Demora en perfusión de la arteria cerebral media.\n- Diagnóstico: I63.9 - Infarto cerebral no especificado.\n- Recomendaciones: iniciar trombólisis intravenosa, control estricto de la presión arterial y rehabilitación neurológica temprana.",
+  "resumen_historial": "Debilidad súbita en el hemicuerpo derecho. Dificultad en el habla y comprensión disminuida. Factores de riesgo: hipertensión y tabaquismo. Lesión hipodensa en la región parietal izquierda. Demora en perfusión de la arteria cerebral media. Diagnóstico: I63.9 - Infarto cerebral no especificado. Recomendaciones: iniciar trombólisis intravenosa, control estricto de la presión arterial, rehabilitación neurológica temprana.",
 
   "riesgo": "alto",
   "justificacion_triaje": "Paciente con diagnóstico de infarto cerebral (I63.9) y síntomas agudos de debilidad en hemicuerpo derecho y dificultad del habla, con factores de riesgo importantes como hipertensión y tabaquismo. La lesión hipodensa en región parietal izquierda y demora en perfusión arterial indican compromiso isquémico crítico que requiere atención médica urgente.",
 
-  "comentario_final_sobre_el_caso": "Caso clínico compatible con infarto cerebral isquémico con alta prioridad médica. No hay imagen de tumor segmentada.",
+  "comentario_final_sobre_el_caso": "NO DISPONIBLE",
 
   "scans": [
     {
@@ -25,7 +25,7 @@
       "flair_path": "pictures/lucia_rodriguez_1_flair.nii",
       "t1ce_path": "pictures/lucia_rodriguez_1_t1ce.nii",
       "p_tumor": 0.948,
-      "mask_file": "NO DISPONIBLE"
+      "mask_file": "segmentations/Resultado_segmentacion_lucia_rodriguez_1.png"
     }
   ]
 }

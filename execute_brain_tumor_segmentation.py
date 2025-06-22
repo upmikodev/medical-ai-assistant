@@ -13,6 +13,8 @@ from tensorflow.keras.models import load_model # <--- Esta es la clave
 from sklearn.preprocessing import MinMaxScaler # Para normalizar las imágenes
 from matplotlib.patches import Patch
 from matplotlib.colors import ListedColormap, BoundaryNorm
+#import matplotlib
+#matplotlib.use('TkAgg') 
 import matplotlib.pyplot as plt
 
 # ——— Configuración básica ———
@@ -187,8 +189,7 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
         os.makedirs(OUT_INPUT_DIR, exist_ok=True)
         slice_idx     = selected_slice_idx       # ya lo tenías en 95
         png_input     = os.path.join(
-            OUT_INPUT_DIR,
-            f"Imagen_Cerebral_slice_{slice_idx}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png")
+            "segmentations/"+f"Imagen_Cerebral_slice_{slice_idx}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png")
         )
 
         plt.figure(figsize=(6, 6), dpi=300)      # 300 dpi → imagen grande y nítida
@@ -266,7 +267,7 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
 
         fig_mask.tight_layout(pad=0)
         fig_mask.savefig(png_mask, bbox_inches='tight', pad_inches=0)
-        fig_mask.show()
+        plt.show()
 
         logger.info(f"Segmentación guardada en {png_mask}")
 
@@ -287,8 +288,12 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
             + os.path.basename(flair_path).replace("_flair.nii", ".png")
             )
         fig_ovl.savefig(png_overlay, bbox_inches='tight', pad_inches=0)
-        fig_ovl.show()
-        return json.dumps({"saved_mask": png_mask})
+        plt.show()
+        return json.dumps({
+            "input_slice": png_input,
+            "mask_file"  : png_mask,
+            "overlay_file": png_overlay
+        })
 
     except Exception as e:
         logger.error(f"Segmentación error: {e}", exc_info=True)

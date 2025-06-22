@@ -192,7 +192,7 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
             "segmentations/"+f"Imagen_Cerebral_slice_{slice_idx}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png")
         )
 
-        plt.figure(figsize=(6, 6), dpi=300)      # 300 dpi → imagen grande y nítida
+        plt.figure(figsize=(6, 6), dpi=200)      # 300 dpi → imagen grande y nítida
         plt.imshow(input_slice[0, :, :, 1], cmap="gray", vmin=0, vmax=1)  # canal 1 = FLAIR
         plt.title(f"FLAIR – Slice {slice_idx}")
         plt.axis("off")

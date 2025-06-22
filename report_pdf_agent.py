@@ -13,7 +13,10 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from strands.tools import tool
-
+from reportlab.platypus import Table, TableStyle, Image as RLImage
+from reportlab.lib import colors
+from reportlab.lib.utils import ImageReader
+from PIL import Image as PILImage
 
 # ---------------------------------------------------------------------
 # 1 · TOOL: genera el PDF a partir de temp/report.json
@@ -44,6 +47,21 @@ def generate_pdf_from_report(report_json_path: str,
         styles = getSampleStyleSheet()
         styles.add(ParagraphStyle(name="Justify", alignment=TA_JUSTIFY, leading=14))
 
+
+        def scaled_image(path: str, max_w_mm: float, max_h_mm: float) -> RLImage:
+            """Devuelve un flowable RLImage escalado para caber en los límites dados."""
+            with PILImage.open(path) as im:
+                w_px, h_px = im.size
+            w_pt, h_pt = w_px * 0.75, h_px * 0.75           # px → pt
+            scale = min((max_w_mm*mm)/w_pt, (max_h_mm*mm)/h_pt, 1.0)
+            return RLImage(path, width=w_pt*scale, height=h_pt*scale)
+
+
+
+
+
+
+
         E = []  # elementos
 
         # Título
@@ -65,6 +83,34 @@ def generate_pdf_from_report(report_json_path: str,
         E.append(Paragraph(data.get('motivo_consulta','NO DISPONIBLE'), styles["Justify"]))
         E.append(Spacer(1, 4*mm))
 
+        # Triaje
+        E.append(Paragraph("<b>Prioridad estimada (triaje automático)</b>", styles["Heading2"]))
+        tri = f"""
+        Riesgo: {data.get('riesgo','NO DISPONIBLE')}<br/>
+        Justificación: {data.get('justificacion_triaje','NO DISPONIBLE')}
+        """
+        E.append(Paragraph(tri, styles["Justify"]))
+        E.append(Spacer(1, 4*mm))
+
+
+
+       # Historial clínico
+        E.append(Paragraph("<b>Síntesis del historial clínico</b>", styles["Heading2"]))
+
+        hist = data.get("resumen_historial", "NO DISPONIBLE")
+        if hist != "NO DISPONIBLE":
+            # convierte "- texto. - texto." en lista con viñetas
+            lines = [l.strip(" -.") for l in hist.split("-") if l.strip()]
+            hist_paragraph = "<br/>".join([f"{ln}" for ln in lines])
+        else:
+            hist_paragraph = "NO DISPONIBLE"
+
+        E.append(Paragraph(hist_paragraph, styles["Justify"]))
+        E.append(Spacer(1, 4*mm))
+
+
+
+
         # Diagnóstico preliminar
         E.append(Paragraph("<b>Diagnóstico preliminar (IA)</b>", styles["Heading2"]))
         diag = f"""
@@ -80,24 +126,43 @@ def generate_pdf_from_report(report_json_path: str,
         seg = f"""
         Zona afectada: {data.get('zona_afectada','NO DISPONIBLE')}<br/>
         Volumen estimado: {data.get('volumen_cc','NO DISPONIBLE')} cc<br/>
-        Máscara: {data.get('nombre_archivo_segmentado','NO DISPONIBLE')}
+        Imagen cerebral: {data.get('input_slice','NO DISPONIBLE')}<br/>
+        Segmentacion del tumor: {data.get('mask_file','NO DISPONIBLE')}<br/>
+        Máscara superpuesta: {data.get('overlay_file','NO DISPONIBLE')}
         """
         E.append(Paragraph(seg, styles["Justify"]))
         E.append(Spacer(1, 4*mm))
 
-        # Historial clínico
-        E.append(Paragraph("<b>Síntesis del historial clínico</b>", styles["Heading2"]))
-        E.append(Paragraph(data.get('resumen_historial','NO DISPONIBLE'), styles["Justify"]))
+        input_png  = data.get("input_slice")
+        mask_png   = data.get("mask_file")
+        overlay_png= data.get("overlay_file")
+
+# 3a. Mini-imágenes lado a lado (máx 70 mm × 70 mm cada una)
+        mini_imgs = []
+        for p in (input_png, mask_png):
+            if p and os.path.exists(p):
+                mini_imgs.append(scaled_image(p, 70, 70))
+            else:
+                mini_imgs.append(Spacer(70*mm, 70*mm))   # hueco vacío
+
+        table = Table([mini_imgs], colWidths=[70*mm, 70*mm])
+        table.setStyle(TableStyle([
+            ("ALIGN", (0,0), (-1,-1), "CENTER"),
+            ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
+            ("BOX", (0,0), (-1,-1), 0.25, colors.lightgrey)
+        ]))
+        E.append(table)
+        E.append(Spacer(1, 3*mm))
+
+        # 3b. Overlay centrada (máx 140 mm × 90 mm)
+        if overlay_png and os.path.exists(overlay_png):
+            E.append(scaled_image(overlay_png, 180, 120))
+            E.append(Spacer(1, 4*mm))
+
         E.append(Spacer(1, 4*mm))
 
-        # Triaje
-        E.append(Paragraph("<b>Prioridad estimada (triaje automático)</b>", styles["Heading2"]))
-        tri = f"""
-        Riesgo: {data.get('riesgo','NO DISPONIBLE')}<br/>
-        Justificación: {data.get('justificacion_triaje','NO DISPONIBLE')}
-        """
-        E.append(Paragraph(tri, styles["Justify"]))
-        E.append(Spacer(1, 4*mm))
+
+
 
         # Conclusión
         E.append(Paragraph("<b>Conclusión del sistema</b>", styles["Heading2"]))

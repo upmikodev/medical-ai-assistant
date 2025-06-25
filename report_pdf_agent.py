@@ -17,6 +17,11 @@ from reportlab.platypus import Table, TableStyle, Image as RLImage
 from reportlab.lib import colors
 from reportlab.lib.utils import ImageReader
 from PIL import Image as PILImage
+from reportlab.graphics.shapes import Drawing, String, Rect
+from reportlab.platypus import Table, TableStyle, Image as RLImage, ListFlowable, ListItem
+from reportlab.lib.colors import HexColor
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
 
 # ---------------------------------------------------------------------
 # 1 · TOOL: genera el PDF a partir de temp/report.json
@@ -56,14 +61,108 @@ def generate_pdf_from_report(report_json_path: str,
             scale = min((max_w_mm*mm)/w_pt, (max_h_mm*mm)/h_pt, 1.0)
             return RLImage(path, width=w_pt*scale, height=h_pt*scale)
 
+        def juanan_logo(width=40*mm, height=15*mm):
+            """Devuelve un Drawing que actúa como logo."""
+            d = Drawing(width, height)
+            d.add(Rect(0, 0, width, height, fillColor=HexColor("#1E88E5"), strokeColor=None))
+            d.add(String(width/2, height/2-4, "JUANAN",
+                        fillColor=colors.white, fontSize=14, fontName="Helvetica-Bold",
+                        textAnchor="middle"))
+            return d
+
+
+        def risk_block(risk: str, justification: str, page_width_mm: float = 170):
+            colors_map = {
+                "alto": "#e53935",
+                "medio": "#ffb300",
+                "bajo": "#43a047",
+                "indeterminado": "#757575",
+                "NO DISPONIBLE": "#757575"
+            }
+            color_hex = colors_map.get(risk.lower(), "#757575")
+            tbl = Table([[Paragraph(f"<b>RIESGO&nbsp;{risk.upper()}</b>", styles["Normal"])]],
+                        colWidths=[page_width_mm *mm])
+            tbl.setStyle(TableStyle([
+                ("BACKGROUND", (0,0), (-1,-1), HexColor(color_hex)),
+                ("TEXTCOLOR", (0,0), (-1,-1), colors.white),
+                ("ALIGN", (0,0), (-1,-1), "CENTER"),
+                ("FONTSIZE", (0,0), (-1,-1), 11),
+                ("BOTTOMPADDING", (0,0), (-1,-1), 4),
+            ]))
+            return [tbl,
+                    Spacer(1, 2*mm),
+                    Paragraph(justification, styles["Justify"]),
+                    Spacer(1, 4*mm)]
 
 
 
+        doc = SimpleDocTemplate(
+            pdf_path, pagesize=A4,
+            leftMargin = 20*mm, rightMargin = 20*mm,
+            topMargin  = 15*mm, bottomMargin = 15*mm
+        )
+
+        styles = getSampleStyleSheet()
+        styles.add(ParagraphStyle(name="Justify", alignment=TA_JUSTIFY, leading=14))
+        logo_path = "logos/4.png" 
+
+
+        # ------------------------------------------------------------------
+        #  LOGO CABECERA ─ pegado a la esquina superior-derecha
+        # ------------------------------------------------------------------
+        PAGE_W, PAGE_H = A4           # 595.28 × 841.89 pt
+        LOGO_W = 70                   # ≈ 25 mm
+        LOGO_H = 42                   # 70 × 0.6
+        WATER_W = 510                 # ≈ 150 mm
+        # ------------------------------------------------------------------
+
+        def add_header_logo(c: canvas.Canvas, _doc):
+            """Logo arriba-derecha pegado a 5 pt del borde físico."""
+            if os.path.exists(logo_path):
+                img = ImageReader(logo_path)
+                x = PAGE_W - LOGO_W - 5      # 5 pt margin from right edge
+                y = PAGE_H - LOGO_H - 5      # 5 pt margin from top edge
+                c.drawImage(img, x, y, width=LOGO_W, height=LOGO_H, mask='auto')
+
+        # ------------------------------------------------------------------
+        #  MARCA DE AGUA ─ centrada, sin rotar, translúcida
+        # ------------------------------------------------------------------
+        def add_watermark(c: canvas.Canvas, _doc):
+            """Marca de agua centrada, sin rotar, translúcida."""
+            if os.path.exists(logo_path):
+                img = ImageReader(logo_path)
+
+                # alto conservando proporción
+                with PILImage.open(logo_path) as pil_im:
+                    wm_h = WATER_W * pil_im.height / pil_im.width
+
+                x = (PAGE_W - WATER_W) / 2
+                y = (PAGE_H - wm_h) / 2
+
+                c.saveState()
+                try:
+                    c.setFillAlpha(0.08)     # 8 % opacity (RL ≥ 3.5)
+                except AttributeError:
+                    pass
+
+                c.drawImage(img, x, y, width=WATER_W, height=wm_h, mask='auto')
+                c.restoreState()
+
+
+
+        def first_page(c, d):
+            add_watermark(c, d)
+            add_header_logo(c, d)
+
+        def later_pages(c, d):
+            add_watermark(c, d)
+            add_header_logo(c, d)
 
 
 
         E = []  # elementos
-
+        #E.append(juanan_logo())            # ← NUEVO
+        #E.append(Spacer(1, 4*mm))
         # Título
         E.append(Paragraph("Informe Clínico Automatizado – Resonancia Craneal", styles["Title"]))
         E.append(Spacer(1, 5*mm))
@@ -85,12 +184,10 @@ def generate_pdf_from_report(report_json_path: str,
 
         # Triaje
         E.append(Paragraph("<b>Prioridad estimada (triaje automático)</b>", styles["Heading2"]))
-        tri = f"""
-        Riesgo: {data.get('riesgo','NO DISPONIBLE')}<br/>
-        Justificación: {data.get('justificacion_triaje','NO DISPONIBLE')}
-        """
-        E.append(Paragraph(tri, styles["Justify"]))
-        E.append(Spacer(1, 4*mm))
+        E.extend(risk_block(
+            data.get("riesgo", "NO DISPONIBLE"),
+            data.get("justificacion_triaje", "NO DISPONIBLE")
+        ))
 
 
 
@@ -101,7 +198,7 @@ def generate_pdf_from_report(report_json_path: str,
         if hist != "NO DISPONIBLE":
             # convierte "- texto. - texto." en lista con viñetas
             lines = [l.strip(" -.") for l in hist.split("-") if l.strip()]
-            hist_paragraph = "<br/>".join([f"{ln}" for ln in lines])
+            hist_paragraph = "<br/>".join([f"  {ln}" for ln in lines])
         else:
             hist_paragraph = "NO DISPONIBLE"
 
@@ -110,12 +207,13 @@ def generate_pdf_from_report(report_json_path: str,
 
 
 
-
+        prob = data.get("tumor_prob")
+        prob_str = f"{prob*100:.1f} %" if prob is not None else "NO DISPONIBLE"
         # Diagnóstico preliminar
         E.append(Paragraph("<b>Diagnóstico preliminar (IA)</b>", styles["Heading2"]))
         diag = f"""
         Resultado: {data.get('tumor_resultado','NO DISPONIBLE')}<br/>
-        Probabilidad: {data.get('tumor_prob','NO DISPONIBLE')}<br/>
+        Probabilidad: {prob_str} <br/>
         Observaciones: {data.get('comentarios_clasificador','NO DISPONIBLE')}
         """
         E.append(Paragraph(diag, styles["Justify"]))
@@ -170,9 +268,10 @@ def generate_pdf_from_report(report_json_path: str,
         E.append(Spacer(1, 6*mm))
 
         # Pie
-        E.append(Paragraph("<i>Informe generado automáticamente por el sistema médico asistido por IA.</i>", styles["Normal"]))
+        E.append(Paragraph("<i>Informe generado automáticamente por el sistema médico asistido por IA, el dia "f"{datetime.now().strftime('%Y-%m-%d %H:%M')}</i>", styles["Normal"]))
+        
+        doc.build(E, onFirstPage=first_page, onLaterPages=later_pages)
 
-        doc.build(E)
         return json.dumps({"pdf_path": pdf_path})
 
     except Exception as e:

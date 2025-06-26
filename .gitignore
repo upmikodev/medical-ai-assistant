@@ -175,3 +175,9 @@ pyrightconfig.json
 
 chroma_db
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+# Large files to ignore
+lora_model.zip
+miriad_4.4M_dataset.zip
+data/miriad_4.4M_dataset/miriad_4.4M.jsonl
+lora_model/adapter_model.safetensors

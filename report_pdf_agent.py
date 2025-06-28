@@ -172,6 +172,7 @@ def generate_pdf_from_report(report_json_path: str,
         datos = f"""
         Nombre: {data.get('nombre','NO DISPONIBLE')}<br/>
         ID: {data.get('paciente_id','NO DISPONIBLE')}<br/>
+        Edad: {data.get('edad','NO DISPONIBLE')}<br/>
         Fecha de la prueba: {data.get('fecha','NO DISPONIBLE')}
         """
         E.append(Paragraph(datos, styles["Normal"]))

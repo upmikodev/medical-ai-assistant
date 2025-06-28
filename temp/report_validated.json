@@ -1,0 +1,33 @@
+{
+  "paciente_id": "lucia_rodriguez",
+  "nombre": "Lucia Rodriguez",
+  "fecha": "2025-06-12",
+  "motivo_consulta": "Accidente cerebrovascular isquemico",
+
+  "tumor_prob": 0.948,
+  "tumor_resultado": "tumor",
+  "comentarios_clasificador": "Probabilidad alta de tumor detectado en el scan 1.",
+
+  "zona_afectada": "region parietal izquierda",
+  "volumen_cc": null,
+  "input_slice": "segmentations/Imagen_Cerebral_slice_95_lucia_rodriguez_1.png",
+  "mask_file": "segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
+  "overlay_file": "segmentations/Resultado_segmentacion_superpuesto_lucia_rodriguez_1.png",
+
+  "resumen_historial": "- Debilidad subita en el hemicuerpo derecho.\n- Dificultad en el habla y comprension disminuida.\n- Factores de riesgo: hipertension y tabaquismo.\n- Lesion hipodensa en la region parietal izquierda.\n- Demora en perfusion de la arteria cerebral media.\n- Diagnostico: I63.9 - Infarto cerebral no especificado.\n- Recomendaciones: Iniciar trombolisis intravenosa. Control estricto de la presion arterial. Rehabilitacion neurologica temprana.",
+
+  "riesgo": "alto",
+  "justificacion_triaje": "Paciente con diagnóstico de accidente cerebrovascular isquémico (I63.9), con síntomas de debilidad súbita en hemicuerpo derecho y dificultad en el habla, factores de riesgo importantes como hipertensión y tabaquismo, además de lesión hipodensa en región parietal izquierda y demora en perfusión de arteria cerebral media. Estas características indican un evento cerebrovascular agudo con riesgo alto que requiere atención médica urgente y medidas específicas como trombólisis intravenosa inmediata, control de presión arterial y rehabilitación neurológica.",
+
+  "comentario_final_sobre_el_caso": "Evento cerebrovascular isquémico grave con hallazgos radiológicos y clínicos que requieren intervención urgente y seguimiento frecuente.",
+
+  "scans": [
+    {
+      "scan_id": "lucia_rodriguez_1",
+      "flair_path": "pictures/lucia_rodriguez_1_flair.nii",
+      "t1ce_path": "pictures/lucia_rodriguez_1_t1ce.nii",
+      "p_tumor": 0.948,
+      "mask_file": "segmentations/Resultado_segmentacion_lucia_rodriguez_1.png"
+    }
+  ]
+}

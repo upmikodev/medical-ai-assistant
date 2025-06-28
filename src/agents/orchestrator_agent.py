@@ -30,9 +30,11 @@ def orchestrator_agent(query: str) -> str:
         # This part needs to be more robust if planner_agent output format changes
         patient_identifier_match = None
         # Regex to find the name after "paciente" and before the next parenthesis
-        match = re.search(r'paciente\s*=\s*"([\w\s]+)"', plan_response)
+        match = re.search(r'paciente\s*"([\w\s]+)"', plan_response)
         if not match:
             match = re.search(r'paciente\s+([\w\s]+?)(?=\s*para|\s*\()', plan_response)
+        if not match:
+            match = re.search(r'paciente\s*:\s*"([\w\s]+)"', plan_response)
         if match:
             patient_name = match.group(1).strip()
             # Replace spaces with underscores for the identifier

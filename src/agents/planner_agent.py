@@ -23,4 +23,4 @@ def planner_agent(query: str) -> str:
         print(f"Error initializing AgentPlanner: {e}")
         agent_planner = None
     
-    return str(agent_planner(query))
+    return str(agent_planner(query)).encode('utf-8', 'ignore').decode('utf-8')

@@ -1,25 +1,11 @@
+from asyncio.log import logger
 import os
 import json
-import logging
 from strands.tools import tool
 
-# Import the specific model needed for find_patient_images_tool
 from src.config.config import strands_model_nano 
+from src.tools.execute_brain_tumor_classifier import classify_tumor_from_image
 
-# Assuming execute_brain_tumor_classifier.py is in the same directory or Python path
-# and the function classify_tumor_from_image_or_patient_id is correctly defined there.
-try:
-    from execute_brain_tumor_classifier import classify_tumor_from_image
-except ImportError:
-    print("WARNING: `classify_tumor_from_image` not found.")
-    print("The `classify_tumor_from_image` function is not available. ")
-    # Define a dummy function if the import fails, so the rest of the app can load
-    def classify_tumor_from_image_or_patient_id(image_path_or_patient_id: str):
-        return {"error": "Classifier function not loaded. Check execute_brain_tumor_classifier.py."}
-
-# Configure logger for tools
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO) # You can adjust the level as needed
 
 @tool
 def find_patient_images_tool(patient_identifier: str, image_directory: str = "data/pictures") -> str:

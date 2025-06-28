@@ -4,6 +4,9 @@
 "miriad_4.4M_dataset.zip" filter=lfs diff=lfs merge=lfs -text
 e=lfs -text
 text
+*.safetensors filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.jsonl filter=lfs diff=lfs merge=lfs -text
 "lora_model.zip filter=lfs diff=lfs merge=lfs -text
 chroma_db/**/*.bin filter=lfs diff=lfs merge=lfs -text
 data/models/*.pkl filter=lfs diff=lfs merge=lfs -text

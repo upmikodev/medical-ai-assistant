@@ -17,7 +17,7 @@
 
 **Segmentación de imagen**  
   - Scan ID: lucia_rodriguez_1
-    - Archivo de Máscara: segmentations/Resultado_segmentacion_lucia_rodriguez_1.png  
+    - Archivo de Máscara: data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png  
 
 **Síntesis del historial clínico**  
 No se encontró información relevante en el historial clínico.  

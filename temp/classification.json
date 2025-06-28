@@ -1,1 +1,1 @@
-{"patient_identifier": "lucia_rodriguez", "classifications": [{"scan_id": "lucia_rodriguez_1", "result": {"error": "invalid load key, 'v'."}}]}
+{"patient_identifier":"marta_kowalska","classifications":[{"scan_id":"marta_kowalska_1","result":{"p_tumor":0.5992109179496765}}]}

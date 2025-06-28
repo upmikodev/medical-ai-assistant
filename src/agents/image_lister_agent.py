@@ -15,7 +15,7 @@ def image_lister_agent(patient_identifier: str) -> str:
         patient_identifier (str): Patient ID in format "Name_LastName1_LastName2"
     
     Tools: 
-        - list_files_in_dir(path="pictures/"): Lists files in the specified directory.
+        - list_files_in_dir(path="data/pictures/"): Lists files in the specified directory.
         - write_file_to_local(path="temp/lister.json", content=json_string): Writes the JSON string to a local file.
         
     Returns:

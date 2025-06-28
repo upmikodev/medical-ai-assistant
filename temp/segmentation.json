@@ -1,1 +1,1 @@
-{"patient_identifier": "carlos_perez_paco", "segmentations": [{"scan_id": "carlos_perez_paco_1", "result": {"saved_mask": "segmentations/Resultado_segmentacion_carlos_perez_paco_1.png"}}]}
+{"patient_identifier": "lucia_rodriguez", "segmentations": [{"scan_id": "lucia_rodriguez_1", "result": {"saved_mask": "segmentations/Resultado_segmentacion_lucia_rodriguez_1.png"}}]}

@@ -108,7 +108,7 @@ _Informe generado automáticamente por el sistema médico asistido por IA. Valid
 """
         # Define report file path
         report_filename = f"reporte_{patient_identifier.lower()}.md"
-        report_path = os.path.join("reportes", report_filename)
+        report_path = os.path.join("data", "reportes", report_filename)
 
         # Save the report
         write_file_to_local(path=report_path, content=report_content)

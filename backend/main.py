@@ -1,14 +1,21 @@
 # main.py
 
 from fastapi import FastAPI, UploadFile, File
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 import os
 import shutil
 import datetime
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src', 'agents')))
+from text_to_speech import text_to_speech, save_audio
 
 # from strands import agent_orchestrator
-# 🔁 Simulación temporal del orquestador. Sustituir por import real cuando se integre strands.
+# 
+ Simulación temporal del orquestador. Sustituir por import real cuando se integre strands.
 def agent_orchestrator(query: str) -> str:
     return f"[SIMULACIÓN] Jarvis recibió la petición: '{query}'"
 
@@ -23,9 +30,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Servir imágenes estáticas
+app.mount("/pictures", StaticFiles(directory="..\\data\\pictures"), name="pictures")
+app.mount("/segmentations", StaticFiles(directory="..\\data\\segmentations"), name="segmentations")
+
 # MODELO PARA MENSAJES DE TEXTO
 class ChatInput(BaseModel):
     message: str
+
+class TextToSpeechInput(BaseModel):
+    text: str
 
 # ENDPOINT DE INTERACCIÓN DE TEXTO
 @app.post("/interact")
@@ -59,3 +73,12 @@ async def upload_image(file: UploadFile = File(...)):
 
     except Exception as e:
         return {"error": f"Error al procesar imagen: {str(e)}"}
+
+# ENDPOINT PARA TEXT-TO-SPEECH
+@app.post("/text-to-speech")
+async def tts(input: TextToSpeechInput):
+    try:
+        audio = text_to_speech(input.text)
+        return StreamingResponse(audio, media_type="audio/mpeg")
+    except Exception as e:
+        return {"error": f"Error en la conversión de texto a voz: {str(e)}"}

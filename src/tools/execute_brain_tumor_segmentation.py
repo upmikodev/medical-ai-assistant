@@ -198,9 +198,9 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
         rgb  = (rgba[...,:3] * 255).astype(np.uint8)        # (H,W,3) uint8
 
         # 3. Asegura carpeta y guarda con Pillow
-        os.makedirs("segmentations", exist_ok=True)
+        os.makedirs("data/segmentations", exist_ok=True)
         png_name = (
-            "segmentations/Resultado_segmentacion_"
+            "data/segmentations/Resultado_segmentacion_"
             + os.path.basename(flair_path).replace("_flair.nii", ".png")
         )
         Image.fromarray(rgb).save(png_name, format="PNG")

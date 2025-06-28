@@ -18,6 +18,24 @@ const ContextProvider = (props) => {
         }, 75 * index);
     }
 
+    const playAudio = async (text) => {
+        try {
+            const response = await fetch('http://localhost:8000/text-to-speech', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text }),
+            });
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+            audio.play();
+        } catch (error) {
+            console.error("Error playing audio:", error);
+        }
+    };
+
     const onSent = async (prompt) => {
         setLoading(true);
         setShowResult(true);
@@ -54,6 +72,8 @@ const ContextProvider = (props) => {
             const nextWord = animatedArray[i];
             delayPara(i, nextWord + " ");
         }
+
+        await playAudio(response);
 
         setLoading(false);
         setInput("");

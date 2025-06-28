@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import './Main.css';
 import { assets } from '../../assets/assets';
 import { Context } from '../../context/Context';
+import Voice from '../Voice/Voice';
 
 const Main = () => {
   const {
@@ -84,7 +85,7 @@ const Main = () => {
             />
             <div>
               <img src={assets.gallery_icon} width={30} alt="" />
-              <img src={assets.mic_icon} width={30} alt="" />
+              <Voice />
               {input && (
                 <img onClick={() => onSent()} src={assets.send_icon} width={30} alt="Enviar" />
               )}

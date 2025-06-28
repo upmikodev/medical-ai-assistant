@@ -2,6 +2,7 @@ from strands import Agent
 from strands.tools import tool
 import uuid
 import json
+import re
 from src.config.config import strands_model_mini
 from src.config.prompts import orchestrator_system_prompt
 from src.agents.planner_agent import planner_agent
@@ -28,8 +29,14 @@ def orchestrator_agent(query: str) -> str:
         # Assuming the plan_response contains the patient identifier
         # This part needs to be more robust if planner_agent output format changes
         patient_identifier_match = None
-        if "Carlos Pérez Paco" in plan_response:
-            patient_identifier_match = "Carlos_Perez_Paco"
+        # Regex to find the name after "paciente" and before the next parenthesis
+        match = re.search(r'paciente\s*=\s*"([\w\s]+)"', plan_response)
+        if not match:
+            match = re.search(r'paciente\s+([\w\s]+?)(?=\s*para|\s*\()', plan_response)
+        if match:
+            patient_name = match.group(1).strip()
+            # Replace spaces with underscores for the identifier
+            patient_identifier_match = patient_name.replace(" ", "_")
         
         if not patient_identifier_match:
             return json.dumps({"error": "Could not extract patient identifier from planner response."})

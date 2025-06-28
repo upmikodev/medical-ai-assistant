@@ -10,14 +10,13 @@
 
 **Diagnóstico preliminar (IA)**  
   - Scan ID: lucia_rodriguez_1
-    - Predicción: Tumor
-    - Probabilidad de Tumor: 90.13%  
+    - Predicción: N/A
+    - Probabilidad de Tumor: 0.00%  
 - Fuente: `Agent::Classifier`  
 - Observaciones: {NO DISPONIBLE}
 
 **Segmentación de imagen**  
-  - Scan ID: lucia_rodriguez_1
-    - Archivo de Máscara: data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png  
+No disponible  
 
 **Síntesis del historial clínico**  
 No se encontró información relevante en el historial clínico.  

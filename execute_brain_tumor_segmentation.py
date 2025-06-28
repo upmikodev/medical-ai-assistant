@@ -12,6 +12,8 @@ from tensorflow.keras.models import load_model # <--- Esta es la clave
 from sklearn.preprocessing import MinMaxScaler # Para normalizar las imágenes
 from matplotlib.patches import Patch
 from matplotlib.colors import ListedColormap, BoundaryNorm
+#import matplotlib
+#matplotlib.use('TkAgg') 
 import matplotlib.pyplot as plt
 
 # ——— Configuración básica ———
@@ -22,6 +24,15 @@ DEVICE        = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASS_NAMES   = ["No tumor", "Tumor"]
 MODEL_PATH    = "models/brain_tumor_segmentation.h5"
 IMG_SIZE = 128
+
+PALETTE = np.array([
+    [0,   0,   0],    # fondo
+    [255, 0,   0],    # clase 1 (necrosis)
+    [0,   255, 0],    # clase 2 (edema)
+    [0,   0,   255]   # clase 3 (realce)
+], dtype=np.uint8)
+
+
 
 #image_path='pictures\carlos_perez_paco_1_flair.nii'
 
@@ -172,10 +183,27 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
         )
         selected_slice_idx = 95
         input_slice = processed_volume[:, :, selected_slice_idx, :][np.newaxis, ...]
+
+        OUT_INPUT_DIR = "segmentations"
+        os.makedirs(OUT_INPUT_DIR, exist_ok=True)
+        slice_idx     = selected_slice_idx       # ya lo tenías en 95
+        png_input     = os.path.join(
+            "segmentations/"+f"Imagen_Cerebral_slice_{slice_idx}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png")
+        )
+
+        plt.figure(figsize=(6, 6), dpi=200)      # 300 dpi → imagen grande y nítida
+        plt.imshow(input_slice[0, :, :, 1], cmap="gray", vmin=0, vmax=1)  # canal 1 = FLAIR
+        plt.title(f"FLAIR – Slice {slice_idx}")
+        plt.axis("off")
+        plt.tight_layout()
+        plt.savefig(png_input, bbox_inches='tight', pad_inches=0)
+        plt.close()
+
+
         print(f"Realizando predicción para la rebanada {selected_slice_idx}...")
         predicted_output = model.predict(input_slice)
         predicted_mask_categorical = np.argmax(predicted_output, axis=-1)[0]
-
+        rgb_mask = PALETTE[predicted_mask_categorical]
         cmap = ListedColormap(['black', 'red', 'green', 'blue']) # 0: Fondo, 1: Necrótico, 2: Edema, 3: Realzante
         norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N) # Límite para 4 clases
 
@@ -186,25 +214,85 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
             Patch(facecolor='blue', edgecolor='blue', label='Enhancing (Class 3)')
         ]
 
-        plt.imshow(predicted_mask_categorical, cmap=cmap, norm=norm)
-        plt.title(f'Predicted Mask - Slice {selected_slice_idx}')
-        plt.legend(handles=legend_elements, loc='lower left', bbox_to_anchor=(0.0, -0.3))
-        plt.axis('off')
+        #plt.imshow(predicted_mask_categorical, cmap=cmap, norm=norm)
+        #plt.title(f'Predicted Mask - Slice {selected_slice_idx}')
+        #plt.legend(handles=legend_elements, loc='lower left', bbox_to_anchor=(0.0, -0.3))
+       # plt.axis('off')
 
-        rgba = plt.cm.get_cmap("jet")(predicted_mask_categorical / 3.0)
+
+
+        #rgba = plt.cm.get_cmap("jet")(predicted_mask_categorical / 3.0)
 
         # 2. Conviértelo a RGB uint8 (descarta alfa)
-        rgb  = (rgba[...,:3] * 255).astype(np.uint8)        # (H,W,3) uint8
+        #rgb  = (rgba[...,:3] * 255).astype(np.uint8)        # (H,W,3) uint8
 
         # 3. Asegura carpeta y guarda con Pillow
-        os.makedirs("segmentations", exist_ok=True)
-        png_name = (
+        #os.makedirs("segmentations", exist_ok=True)
+        #png_name = ("segmentations/Resultado_segmentacion_"+ os.path.basename(flair_path).replace("_flair.nii", ".png"))
+
+        #plt.figure(figsize=(6,6), dpi=200)
+        #plt.imshow(predicted_mask_categorical, cmap=cmap, norm=norm)
+        #plt.title(f'Predicted Mask - Slice {selected_slice_idx}')
+        #plt.legend(handles=legend_elements, loc='lower left', bbox_to_anchor=(0.0, -0.3))
+        #plt.axis("off")
+        #plt.tight_layout()
+        #plt.savefig(png_name, bbox_inches="tight", pad_inches=0)
+
+        #rgb_mask = PALETTE[predicted_mask_categorical]
+        #Image.fromarray(rgb_mask).save(png_name, format="PNG")
+        #logger.info(f"Segmentación guardada como: {png_name}")
+
+
+        legend_cfg = dict(
+            handles=legend_elements,
+            loc='lower left',
+            frameon=True,      # muestra recuadro
+            facecolor='white', # fondo blanco → contrasta
+            edgecolor='white',
+            fontsize=8
+        )
+
+
+# ---------- FIGURA: máscara con leyenda ----------------
+        fig_mask, ax_mask = plt.subplots(figsize=(6, 6), dpi=200)
+        ax_mask.imshow(rgb_mask)           # muestra ya la máscara en RGB
+        ax_mask.axis('off')                # sin ejes/ticks
+        ax_mask.legend(**legend_cfg)
+        ax_mask.set_title(f'Predicted Mask – Slice {selected_slice_idx}') 
+        png_mask = (
             "segmentations/Resultado_segmentacion_"
             + os.path.basename(flair_path).replace("_flair.nii", ".png")
         )
-        Image.fromarray(rgb).save(png_name, format="PNG")
-        logger.info(f"Segmentación guardada como: {png_name}")
-        return json.dumps({"saved_mask": png_name})
+
+        fig_mask.tight_layout(pad=0)
+        fig_mask.savefig(png_mask, bbox_inches='tight', pad_inches=0)
+        plt.show()
+
+        logger.info(f"Segmentación guardada en {png_mask}")
+
+
+
+
+# ---------- FIGURA: superposición ----------------------
+        fig_ovl, ax_ovl = plt.subplots(figsize=(6, 6), dpi=200)
+        ax_ovl.imshow(input_slice[0, :, :, 1], cmap='gray', vmin=0, vmax=1)
+        ax_ovl.imshow(rgb_mask, alpha=0.50)      # 35 % de transparencia
+        ax_ovl.axis('off')
+        ax_ovl.legend(**legend_cfg)
+        ax_ovl.set_title('Imágenes superpuestas')
+        fig_ovl.tight_layout(pad=0)
+        
+        png_overlay = (
+            "segmentations/Resultado_segmentacion_superpuesto_"
+            + os.path.basename(flair_path).replace("_flair.nii", ".png")
+            )
+        fig_ovl.savefig(png_overlay, bbox_inches='tight', pad_inches=0)
+        plt.show()
+        return json.dumps({
+            "input_slice": png_input,
+            "mask_file"  : png_mask,
+            "overlay_file": png_overlay
+        })
 
     except Exception as e:
         logger.error(f"Segmentación error: {e}", exc_info=True)

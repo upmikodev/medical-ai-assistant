@@ -122,22 +122,48 @@ def list_files_in_dir(directory: str) -> str:
 
 @tool(
     name="read_file_from_local",
-    description="Reads the content of a local text file"
+    description=(
+        "Reads the content of a local text file. Tries UTF-8 first; if a "
+        "Unicode error occurs it automatically retries with UTF-16."
+    )
 )
-def read_file_from_local(path: str, encoding: str = 'utf-8') -> str:
+def read_file_from_local(path: str, encoding: str = "utf-8") -> str:
     """
     Reads the content of a local text file.
+
     Args:
         path (str): The path to the file to read.
-        encoding (str): The encoding of the file (defaults to 'utf-8').
+        encoding (str): Text encoding to use (defaults to 'utf-8').
+
     Returns:
-        str: A JSON string with the file content or an error message.
+        str: A JSON string:
+             { "content": "<file text>" } on success, or
+             { "error": "<message>" }   on failure.
     """
-    logger.info(f"Tool: Reading local file '{path}'")
+    logger.info(f"Tool: Reading local file '{path}' (enc={encoding})")
+
+    # ---------- 1st attempt: UTF-8 (or the encoding passed in) ----------
     try:
-        with open(path, 'r', encoding=encoding) as f:
+        with open(path, "r", encoding=encoding) as f:
             content = f.read()
         return json.dumps({"content": content})
+
+    # ---------- If UTF-8 fails with a Unicode error, retry in UTF-16 ----
+    except UnicodeError as ue:
+        logger.warning(
+            f"Tool: UnicodeError for '{path}' with {encoding} "
+            f"({ue}); retrying with UTF-16."
+        )
+        try:
+            # Most Windows editors save as UTF-16 LE without BOM
+            with open(path, "r", encoding="utf-16") as f:
+                content = f.read()
+            return json.dumps({"content": content})
+        except Exception as e2:
+            logger.error(f"Tool: UTF-16 also failed for '{path}': {e2}")
+            return json.dumps({"error": f"Error reading file '{path}': {str(e2)}"})
+
+    # ---------- Any other I/O error ------------------------------------
     except Exception as e:
         logger.error(f"Tool: Error reading file '{path}': {e}")
         return json.dumps({"error": f"Error reading file '{path}': {str(e)}"})
@@ -164,6 +190,17 @@ def write_file_to_local(path: str, content: str) -> str:
     except Exception as e:
         logger.error(f"Tool: Error writing file '{path}': {e}")
         return json.dumps({"error": f"Error writing file '{path}': {str(e)}"})
+
+
+
+
+
+
+
+
+
+
+
 
 @tool(
     name="classify_single_image_tool",

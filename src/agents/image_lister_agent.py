@@ -3,7 +3,7 @@ from strands.tools import tool
 import json
 from src.config.config import strands_model_mini
 from src.config.prompts import image_lister_system_prompt
-from src.tools.strands_tools import list_files_in_dir, write_file_to_local
+from src.tools.file_system_tools import list_files_in_dir, write_file_to_local
 
 @tool()
 def image_lister_agent(patient_identifier: str) -> str:

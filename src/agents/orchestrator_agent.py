@@ -14,7 +14,7 @@ from src.agents.rag_agent import rag_agent
 from src.agents.triage_agent import triage_agent
 from src.agents.report_agent import report_agent
 from src.agents.report_validator_agent import report_validator_agent
-from src.tools.strands_tools import read_file_from_local
+from src.tools.file_system_tools import read_file_from_local
 
 @tool()
 def orchestrator_agent(query: str) -> str:

@@ -29,8 +29,8 @@ def report_validator_agent(report_path: str, classification_data: str, segmentat
     """
     try:
         # Read the generated report
-        generated_report_content_json = read_file_from_local(path=report_path)
-        generated_report_content = json.loads(generated_report_content_json).get("content", "")
+        from src.tools.extract_text_from_pdf import extract_text_from_pdf
+        generated_report_content = extract_text_from_pdf(report_path)
 
         # Parse the input data
         classification_data_parsed = json.loads(classification_data)
@@ -45,7 +45,7 @@ def report_validator_agent(report_path: str, classification_data: str, segmentat
         if classification_data_parsed and classification_data_parsed.get("classifications"):
             for cls in classification_data_parsed["classifications"]:
                 prediction = cls.get("result", {}).get("prediction")
-                if prediction == "Tumor" and "Diagnóstico preliminar (IA)" not in generated_report_content:
+                if prediction == "Tumor" and "Resultado: Tumor" not in generated_report_content:
                     is_valid = False
                     validation_message = "VALIDACIÓN RECHAZADA: El informe no menciona el diagnóstico de tumor."
                     break

@@ -38,7 +38,8 @@ def rag_tool(paciente: str, query: str) -> str:
 
         # Ejecutar búsqueda semántica
         retriever = vector_store.as_retriever(search_kwargs={"k": 3})
-        results = retriever.get_relevant_documents(query)
+        results = retriever.invoke(query)
+
 
         print(f"Resultados encontrados: {len(results)} documentos relevantes.")
         print(results)

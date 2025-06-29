@@ -3,7 +3,7 @@
   "nombre": "Lucía Rodríguez",
   "edad": 45,
   "fecha": "2025-06-12",
-  "motivo_consulta": "Accidente cerebrovascular isquemico",
+  "motivo_consulta": "Accidente cerebrovascular isquémico",
 
   "tumor_prob": 0.977,
   "tumor_resultado": "tumor",
@@ -15,10 +15,10 @@
   "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
   "overlay_file": "data/segmentations/Resultado_segmentacion_superpuesto_lucia_rodriguez_1.png",
 
-  "resumen_historial": "Informe Clínico Automatizado Resonancia Craneal\n\nDatos del paciente:\n- Nombre: Lucia Rodriguez\n- Edad: 45\n- Sexo: Femenino\n- Fecha: 12/06/2025\n\nMotivo de consulta:\nAccidente cerebrovascular isquemico\n\nResumen clinico:\n- Debilidad subita en el hemicuerpo derecho.\n- Dificultad en el habla y comprension disminuida.\n- Factores de riesgo: hipertension y tabaquismo.\n\nHallazgos de imagen:\n- Lesion hipodensa en la region parietal izquierda.\n- Demora en perfusion de la arteria cerebral media.\n\nDiagnostico:\nI63.9 - Infarto cerebral no especificado.\n\nRecomendaciones:\n- Iniciar trombolisis intravenosa.\n- Control estricto de la presion arterial.\n- Rehabilitacion neurologica temprana.\n\n_Informe generado automaticamente por el sistema medico asistido por IA._",
+  "resumen_historial": "Accidente cerebrovascular isquémico con debilidad súbita en el hemicuerpo derecho, dificultad en el habla y comprensión disminuida. Factores de riesgo: hipertensión y tabaquismo. Lesión hipodensa en la región parietal izquierda con demora en perfusión de la arteria cerebral media. Diagnóstico I63.9 - Infarto cerebral no especificado. Recomendaciones: trombólisis intravenosa, control estricto de la presión arterial y rehabilitación neurológica temprana.",
 
   "riesgo": "alto",
-  "justificacion_triaje": "Paciente femenina de 45 años con accidente cerebrovascular isqu\u0000mico confirmado por lesion hipodensa en regi\u0000n parietal izquierda, acompa\u0000ada de demora en perfusi\u0000n de la arteria cerebral media. Presenta s\u0000ntomas agudos de debilidad en hemicuerpo derecho y dificultad del habla, con factores de riesgo importantes como hipertensi\u0000n y tabaquismo. Se recomienda iniciar trombolisis intravenosa, indicando urgencia alta para intervenci\u0000n m\u0000dcdica inmediata.",
+  "justificacion_triaje": "Paciente con infarto cerebral isquémico agudo (lesión en región parietal izquierda, demora en perfusión de arteria cerebral media) y síntomas neurológicos recientes y graves (debilidad del hemicuerpo derecho, dificultad en el habla y comprensión disminuida). Además, presenta factores de riesgo significativos (hipertensión y tabaquismo). Se requiere atención médica urgente para trombólisis y manejo especializado.",
 
   "comentario_final_sobre_el_caso": "NO DISPONIBLE",
 

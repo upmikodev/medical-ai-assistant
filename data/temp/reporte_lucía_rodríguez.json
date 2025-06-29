@@ -1,0 +1,28 @@
+{
+  "paciente_id": "Luc\u00eda_Rodr\u00edguez",
+  "nombre": "Luc\u00eda Rodr\u00edguez",
+  "fecha": "NO DISPONIBLE",
+  "edad": "NO DISPONIBLE",
+  "motivo_consulta": "NO DISPONIBLE",
+  "tumor_prob": 0.9476225972175598,
+  "tumor_resultado": "Tumor",
+  "comentarios_clasificador": "Predicci\u00f3n: Tumor, Probabilidad de Tumor: 0.95%",
+  "zona_afectada": "NO DISPONIBLE",
+  "volumen_cc": null,
+  "input_slice": "data/segmentations/Imagen_Cerebral_slice_95_lucia_rodriguez_1.png",
+  "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
+  "overlay_file": "data/segmentations/Resultado_segmentacion_superpuesto_lucia_rodriguez_1.png",
+  "resumen_historial": "No se encontr\u00f3 informaci\u00f3n relevante en el historial cl\u00ednico.",
+  "riesgo": "NO DETERMINADO",
+  "justificacion_triaje": "No se pudo determinar la justificaci\u00f3n.",
+  "comentario_final_sobre_el_caso": "NO DISPONIBLE",
+  "scans": [
+    {
+      "scan_id": "lucia_rodriguez_1",
+      "flair_path": "NO DISPONIBLE",
+      "t1ce_path": "NO DISPONIBLE",
+      "p_tumor": 0.9476225972175598,
+      "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png"
+    }
+  ]
+}

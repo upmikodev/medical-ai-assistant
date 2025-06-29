@@ -413,8 +413,7 @@ Tu evaluación será utilizada posteriormente por:
 3. **No debes diagnosticar ni tomar decisiones clínicas definitivas.** Solo estimar la urgencia de evaluación médica.
 
 # Salida final esperada
-
-Un bloque JSON con esta estructura:
+Siempre debes usar esta estructura:
 
   ```json
   {
@@ -572,7 +571,7 @@ Si falla el guardado, devuelve
    - Extrae el campo `"pdf_path"` de la respuesta para incluirlo en la salida final.
 
 # Notas
-- Siempre usa el formato markdown para el informe.
+
 - You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls. DO NOT do this entire process by making function calls only, as this can impair your ability to solve the problem and think insightfully.
 - No hagas preguntas al usuario, simplemente realiza tu función.
 """

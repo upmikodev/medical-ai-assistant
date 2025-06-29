@@ -4,7 +4,7 @@ import json
 from src.config.config import strands_model_mini
 from src.config.prompts import clasificacion_system_prompt
 from src.tools.execute_brain_tumor_classifier import classify_tumor_from_image
-from src.tools.strands_tools import read_file_from_local, write_file_to_local
+from src.tools.file_system_tools import read_file_from_local, write_file_to_local
 
 @tool()
 def clasificacion_agent(patient_data: str) -> str:

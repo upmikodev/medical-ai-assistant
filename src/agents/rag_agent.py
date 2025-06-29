@@ -29,7 +29,7 @@ def rag_agent(query: str) -> str:
             ],
             system_prompt=rag_system_prompt
         )
-        return rag_agent(query)
+        return str(rag_agent(query))
     except Exception as e:
         return json.dumps({
             "error": str(e)

@@ -1,0 +1,39 @@
+Tool #1: rag_tool
+Ejecutando RAG Tool para el paciente: Lucía_Rodríguez con query: historial clínico, antecedentes médicos, historial médico, información clínica relevante, evolución clínica de Lucía Rodríguez
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+Exception ignored in: <function Image.__del__ at 0x0000015EB1860A40>
+Traceback (most recent call last):
+  File "C:\Users\otero\AppData\Local\Programs\Python\Python311\Lib\tkinter\__init__.py", line 4105, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000015EB1709C60>
+Traceback (most recent call last):
+  File "C:\Users\otero\AppData\Local\Programs\Python\Python311\Lib\tkinter\__init__.py", line 410, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000015EB1709C60>
+Traceback (most recent call last):
+  File "C:\Users\otero\AppData\Local\Programs\Python\Python311\Lib\tkinter\__init__.py", line 410, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000015EB1709C60>
+Traceback (most recent call last):
+  File "C:\Users\otero\AppData\Local\Programs\Python\Python311\Lib\tkinter\__init__.py", line 410, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000015EB1709C60>
+Traceback (most recent call last):
+  File "C:\Users\otero\AppData\Local\Programs\Python\Python311\Lib\tkinter\__init__.py", line 410, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: main thread is not in main loop
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event ClientStartEvent: capture() takes 1 positional argument but 3 were given
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+C:\Users\otero\Documents\MIOTI\Classroom\TFM\src\tools\rag_tool.py:41: LangChainDeprecationWarning: The method `BaseRetriever.get_relevant_documents` was deprecated in langchain-core 0.1.46 and will be removed in 1.0. Use :meth:`~invoke` instead.
+  results = retriever.get_relevant_documents(query)
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+Resultados encontrados: 3 documentos relevantes.

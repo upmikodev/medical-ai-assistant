@@ -328,8 +328,8 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
         
 
         X = np.empty((VOLUME_SLICES, IMG_SIZE, IMG_SIZE, 2))
-        flair=nib.load(t1ce_path).get_fdata()
-        t1ce=nib.load(flair_path).get_fdata()
+        flair=nib.load(flair_path).get_fdata()
+        t1ce=nib.load(t1ce_path).get_fdata()
 
         for j in range(VOLUME_SLICES):
             X[j,:,:,0] = cv2.resize(flair[:,:,j+VOLUME_START_AT], (IMG_SIZE,IMG_SIZE))

@@ -7,7 +7,7 @@ from src.config.config import strands_model_nano
 from src.tools.execute_brain_tumor_classifier import classify_tumor_from_image
 
 @tool
-def find_patient_images_tool(patient_identifier: str, image_directory: str = "data/pictures") -> str:
+def find_patient_images_tool(patient_identifier: str, image_directory: str = "pictures") -> str:
     """Finds image files for a given patient identifier in a specified directory.
     Uses an LLM to intelligently match filenames against the patient identifier.
     Args:
@@ -73,6 +73,11 @@ def find_patient_images_tool(patient_identifier: str, image_directory: str = "da
         
         logger.info(f"Tool: Found {len(image_paths)} image(s) for patient '{patient_identifier}': {image_paths}")
         return json.dumps(image_paths)
+
+    except Exception as e:
+        logger.error(f"Tool: Error in find_patient_images_tool for '{patient_identifier}': {e}", exc_info=True)
+        return json.dumps({"error": f"Error finding images for '{patient_identifier}': {str(e)}"})
+
 
     except Exception as e:
         logger.error(f"Tool: Error in find_patient_images_tool for '{patient_identifier}': {e}", exc_info=True)

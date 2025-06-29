@@ -1,6 +1,6 @@
 {
   "paciente_id": "lucia_rodriguez",
-  "nombre": "Lucia Rodriguez",
+  "nombre": "Lucía Rodríguez",
   "edad": 45,
   "fecha": "2025-06-12",
   "motivo_consulta": "Accidente cerebrovascular isquemico",
@@ -9,24 +9,26 @@
   "tumor_resultado": "tumor",
   "comentarios_clasificador": "NO DISPONIBLE",
 
-  "zona_afectada": "NO DISPONIBLE",
+  "zona_afectada": "región parietal izquierda",
   "volumen_cc": null,
   "input_slice": "data/segmentations/Imagen_Cerebral_slice_60_lucia_rodriguez_1.png",
   "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
   "overlay_file": "data/segmentations/Resultado_segmentacion_superpuesto_lucia_rodriguez_1.png",
 
-  "resumen_historial": "Paciente femenina de 45 años con accidente cerebrovascular isquémico confirmado. Presenta debilidad súbita en hemicuerpo derecho, dificultad en el habla y comprensión disminuida. Factores de riesgo incluyen hipertensión y tabaquismo. Lesión hipodensa en región parietal izquierda y demora en perfusión de arteria cerebral media. Diagnóstico: I63.9 - Infarto cerebral no especificado. Recomendaciones: iniciar trombólisis intravenosa, control estricto de la presión arterial y rehabilitación neurológica temprana.",
+  "resumen_historial": "Informe Clínico Automatizado Resonancia Craneal\n\nDatos del paciente:\n- Nombre: Lucia Rodriguez\n- Edad: 45\n- Sexo: Femenino\n- Fecha: 12/06/2025\n\nMotivo de consulta:\nAccidente cerebrovascular isquemico\n\nResumen clinico:\n- Debilidad subita en el hemicuerpo derecho.\n- Dificultad en el habla y comprension disminuida.\n- Factores de riesgo: hipertension y tabaquismo.\n\nHallazgos de imagen:\n- Lesion hipodensa en la region parietal izquierda.\n- Demora en perfusion de la arteria cerebral media.\n\nDiagnostico:\nI63.9 - Infarto cerebral no especificado.\n\nRecomendaciones:\n- Iniciar trombolisis intravenosa.\n- Control estricto de la presion arterial.\n- Rehabilitacion neurologica temprana.\n\n_Informe generado automaticamente por el sistema medico asistido por IA._",
 
   "riesgo": "alto",
-  "justificacion_triaje": "Paciente con accidente cerebrovascular isquémico (infarto cerebral no especificado) confirmado por lesión hipodensa en región parietal izquierda y demora en perfusión de arteria cerebral media, asociada a síntomas neurológicos agudos como debilidad hemicorporal derecha y dificultades del lenguaje. Factores de riesgo importantes como hipertensión y tabaquismo presentes. Requiere inicio urgente de trombólisis y control estricto, por lo que se justifica prioridad alta para evaluación médica inmediata.",
+  "justificacion_triaje": "Paciente femenina de 45 años con accidente cerebrovascular isqu\u0000mico confirmado por lesion hipodensa en regi\u0000n parietal izquierda, acompa\u0000ada de demora en perfusi\u0000n de la arteria cerebral media. Presenta s\u0000ntomas agudos de debilidad en hemicuerpo derecho y dificultad del habla, con factores de riesgo importantes como hipertensi\u0000n y tabaquismo. Se recomienda iniciar trombolisis intravenosa, indicando urgencia alta para intervenci\u0000n m\u0000dcdica inmediata.",
 
   "comentario_final_sobre_el_caso": "NO DISPONIBLE",
 
-  "scans": [{
-    "scan_id": "lucia_rodriguez_1",
-    "flair_path": "data/pictures/lucia_rodriguez_1_flair.nii",
-    "t1ce_path": "data/pictures/lucia_rodriguez_1_t1ce.nii",
-    "p_tumor": 0.977,
-    "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png"
-  }]
+  "scans": [
+    {
+      "scan_id": "lucia_rodriguez_1",
+      "flair_path": "data/pictures/lucia_rodriguez_1_flair.nii",
+      "t1ce_path": "data/pictures/lucia_rodriguez_1_t1ce.nii",
+      "p_tumor": 0.977,
+      "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png"
+    }
+  ]
 }

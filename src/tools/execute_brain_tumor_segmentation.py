@@ -18,7 +18,6 @@ from skimage.measure import find_contours
 #import matplotlib
 #matplotlib.use('TkAgg') 
 import matplotlib.pyplot as plt
-
 # ——— Configuración básica ———
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -125,41 +124,61 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     """Muestra 6 figuras independientes (FLAIR, GT, pred y clases) para un slice."""
 
     os.makedirs(OUT_INPUT_DIR, exist_ok=True)
-    png_input     = os.path.join(
-        OUT_INPUT_DIR+f"Imagen_Cerebral_slice_{SELECTED_SLICE_IDX}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png")
-    )
 
 
-    png_mask = (
-    OUT_INPUT_DIR+"Resultado_segmentacion_"
-    + os.path.basename(flair_path).replace("_flair.nii", ".png")
-    )
+    png_input     = os.path.join( OUT_INPUT_DIR+f"Imagen_Cerebral_slice_{SELECTED_SLICE_IDX}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png"))
+
+    png_mask = (OUT_INPUT_DIR+"Resultado_segmentacion_"
+    + os.path.basename(flair_path).replace("_flair.nii", ".png"))
 
 
-    png_overlay = (
-    OUT_INPUT_DIR+"Resultado_segmentacion_superpuesto_"
-    + os.path.basename(flair_path).replace("_flair.nii", ".png")
-    )
+    png_overlay = ( OUT_INPUT_DIR+"Resultado_segmentacion_superpuesto_"
+    + os.path.basename(flair_path).replace("_flair.nii", ".png"))
 
 
 
-
-
-    k = start_slice + VOLUME_START_AT                       # corte real en el volumen
-    flair_2d = cv2.resize(flair[:, :, k], (IMG_SIZE, IMG_SIZE))
-    #gt_2d    = cv2.resize(gt[:, :, k],    (IMG_SIZE, IMG_SIZE), interpolation=cv2.INTER_NEAREST)
     core = p[:,:,:,1]
     edema= p[:,:,:,2]
     enhancing = p[:,:,:,3]
 
 
+
+    k = start_slice + VOLUME_START_AT  
+    ups = 4  # factor de escala para la vista
+    flair_vis = cv2.resize(flair[:, :, k],(IMG_SIZE*ups, IMG_SIZE*ups),
+            interpolation=cv2.INTER_CUBIC) 
+    mask_all = cv2.resize(p[start_slice, :, :, 1:4],(IMG_SIZE*ups,IMG_SIZE*ups),
+            interpolation=cv2.INTER_NEAREST) 
+    mask_core = cv2.resize(core[start_slice,:,:],(IMG_SIZE*ups, IMG_SIZE*ups),
+            interpolation=cv2.INTER_NEAREST)
+    mask_edema = cv2.resize(edema[start_slice,:,:],(IMG_SIZE*ups, IMG_SIZE*ups),
+            interpolation=cv2.INTER_NEAREST)
+    mask_enhancing = cv2.resize(enhancing[start_slice,:,:],(IMG_SIZE*ups,IMG_SIZE*ups),interpolation=cv2.INTER_NEAREST)
+
+
+
+
+    # corte real en el volumen
+    flair_2d = cv2.resize(flair[:, :, k], (IMG_SIZE, IMG_SIZE))
+
+
+    #gt_2d    = cv2.resize(gt[:, :, k],    (IMG_SIZE, IMG_SIZE), interpolation=cv2.INTER_NEAREST)
+
+
     # 1) FLAIR original
+    # plt.figure(figsize=(6, 6), dpi=200)
+    # plt.imshow(flair_2d, cmap='gray')
+    # plt.title('Original FLAIR')
+    # plt.axis('off')
+    # plt.savefig(png_input, bbox_inches='tight', pad_inches=0)
+
     plt.figure(figsize=(6, 6), dpi=200)
-    plt.imshow(flair_2d, cmap='gray')
-    plt.title('Original FLAIR')
+    plt.imshow(flair_vis, cmap='gray',interpolation='bilinear')
+    plt.title('Original FLAIR 2')
     plt.axis('off')
     plt.savefig(png_input, bbox_inches='tight', pad_inches=0)
-
+    plt.close() 
+    
     # 2) Ground-truth
     if False:
         plt.figure(figsize=(4,4))
@@ -168,32 +187,57 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
         plt.title('Ground truth')
         plt.axis('off')
 
-    # 3-6) Predicciones
+    # 3) All Clases
+    # plt.figure(figsize=(6, 6), dpi=200)
+    # plt.imshow(flair_2d, cmap='gray')
+    # plt.imshow(p[start_slice,:,:,1:4], cmap='Reds', alpha=0.3, interpolation='none')
+    # plt.title('All classes predicted')
+    # plt.axis('off')
+    # plt.savefig(png_overlay, bbox_inches='tight', pad_inches=0)
+
     plt.figure(figsize=(6, 6), dpi=200)
-    plt.imshow(flair_2d, cmap='gray')
-    plt.imshow(p[start_slice,:,:,1:4], cmap='Reds', alpha=0.3, interpolation='none')
+    plt.imshow(flair_vis, cmap='gray', interpolation='bilinear')
+    plt.imshow(mask_all, cmap='Reds', alpha=0.3, interpolation='nearest')
     plt.title('All classes predicted')
     plt.axis('off')
     plt.savefig(png_overlay, bbox_inches='tight', pad_inches=0)
+    plt.close() 
 
-    plt.figure(figsize=(4,4))
-    plt.imshow(flair_2d, cmap='gray')
-    plt.imshow(core[start_slice,:,:], cmap='Reds', alpha=0.3, interpolation='none')
+
+    # 4) Core
+    # plt.figure(figsize=(4,4))
+    # plt.imshow(flair_2d, cmap='gray')
+    # plt.imshow(core[start_slice,:,:], cmap='Reds', alpha=0.3, interpolation='none')
+
+    plt.figure(figsize=(6, 6), dpi=200)
+    plt.imshow(flair_vis, cmap='gray', interpolation='bilinear')
+    plt.imshow(mask_core, cmap='Reds', alpha=0.3, interpolation='nearest')
     plt.title(f'{SEGMENT_CLASSES[1]} predicted')
     plt.axis('off')
 
-    plt.figure(figsize=(4,4))
-    plt.imshow(flair_2d, cmap='gray')
-    plt.imshow(edema[start_slice,:,:], cmap='Reds', alpha=0.3, interpolation='none')
+
+    # 4) Edema
+    # plt.figure(figsize=(4,4))
+    # plt.imshow(flair_2d, cmap='gray')
+    # plt.imshow(edema[start_slice,:,:], cmap='Reds', alpha=0.3, interpolation='none')
+    plt.figure(figsize=(6, 6), dpi=200)
+    plt.imshow(flair_vis, cmap='gray', interpolation='bilinear')
+    plt.imshow(mask_edema, cmap='Reds', alpha=0.3, interpolation='nearest')
     plt.title(f'{SEGMENT_CLASSES[2]} predicted')
     plt.axis('off')
     plt.savefig(png_mask, bbox_inches='tight', pad_inches=0)
+    plt.close() 
 
-    plt.figure(figsize=(4,4))
-    plt.imshow(flair_2d, cmap='gray')
-    plt.imshow(enhancing[start_slice,:,:], cmap='Reds', alpha=0.3, interpolation='none')
+    # 4) enhancing
+    # plt.figure(figsize=(4,4))
+    # plt.imshow(flair_2d, cmap='gray')
+    # plt.imshow(enhancing[start_slice,:,:], cmap='Reds', alpha=0.3, interpolation='none')
+    plt.figure(figsize=(6, 6), dpi=200)
+    plt.imshow(flair_vis, cmap='gray', interpolation='bilinear')
+    plt.imshow(mask_enhancing, cmap='Reds', alpha=0.3, interpolation='nearest')    
     plt.title(f'{SEGMENT_CLASSES[3]} predicted')
     plt.axis('off')
+
 
     #plt.show()
 
@@ -208,7 +252,7 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     ]
 
 
-    return png_input, png_mask,png_overlay
+    return png_input, png_mask, png_overlay
 
 
 
@@ -312,8 +356,8 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
 # if __name__ == "__main__":
 #     import argparse, sys, json
 
-#     flair_path="pictures/lucia_rodriguez_1_flair.nii"
-#     t1ce_path="pictures/lucia_rodriguez_1_t1ce.nii"
+#     flair_path="data/pictures/lucia_rodriguez_1_flair.nii"
+#     t1ce_path="data/pictures/lucia_rodriguez_1_t1ce.nii"
 #     result = segmenter_tumor_from_image(flair_path, t1ce_path)
 #     # Pretty-print JSON result or error
 #     try:

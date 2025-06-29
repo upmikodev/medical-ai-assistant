@@ -43,7 +43,7 @@ def clasificacion_agent(patient_data: str) -> str:
         final_result = {"patient_identifier": patient_identifier, "classifications": classifications}
         
         # Save results to temp/classification.json
-        write_file_to_local(path="temp/classification.json", content=json.dumps(final_result))
+        write_file_to_local(path="data/temp/classification.json", content=json.dumps(final_result))
 
         return json.dumps(final_result)
     except Exception as e:

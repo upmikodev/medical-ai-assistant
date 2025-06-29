@@ -40,13 +40,13 @@ async def interact(input: ChatInput):
 @app.post("/upload-image")
 async def upload_image(file: UploadFile = File(...)):
     try:
-        os.makedirs("pictures", exist_ok=True)
+        os.makedirs("data/pictures", exist_ok=True)
 
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         base_name = file.filename.split('.')[0].lower()
         ext = file.filename.split('.')[-1]
         filename = f"{base_name}_{timestamp}.{ext}"
-        filepath = os.path.join("pictures", filename)
+        filepath = os.path.join("data/pictures", filename)
 
         with open(filepath, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)

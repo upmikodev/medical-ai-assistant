@@ -12,10 +12,12 @@ from tensorflow.keras.models import load_model # <--- Esta es la clave
 from sklearn.preprocessing import MinMaxScaler # Para normalizar las imágenes
 from matplotlib.patches import Patch
 from matplotlib.colors import ListedColormap, BoundaryNorm
+import matplotlib
+from skimage.transform import resize
+from skimage.measure import find_contours
 #import matplotlib
 #matplotlib.use('TkAgg') 
 import matplotlib.pyplot as plt
-
 # ——— Configuración básica ———
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,8 +25,12 @@ logger = logging.getLogger(__name__)
 DEVICE        = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASS_NAMES   = ["No tumor", "Tumor"]
 MODEL_PATH    = "data/models/brain_tumor_segmentation.h5"
-IMG_SIZE = 128
+WEIGHTS_PATH  = "data/models/model_26-0.023368.weights.h5"
 
+IMG_SIZE = 128
+VOLUME_SLICES = 100
+VOLUME_START_AT = 22 # first slice of volume that we will include
+SELECTED_SLICE_IDX=60
 PALETTE = np.array([
     [0,   0,   0],    # fondo
     [255, 0,   0],    # clase 1 (necrosis)
@@ -32,10 +38,25 @@ PALETTE = np.array([
     [0,   0,   255]   # clase 3 (realce)
 ], dtype=np.uint8)
 
+SEGMENT_CLASSES = {
+    0 : 'NOT tumor',
+    1 : 'NECROTIC/CORE', # or NON-ENHANCING tumor CORE
+    2 : 'EDEMA',
+    3 : 'ENHANCING' # original 4 -> converted into 3
+}
+
+cmap = matplotlib.colors.ListedColormap(["#000000", "#1121b2", "#0c8f61", "#930000"])
+norm = matplotlib.colors.BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N)
 
 
-#image_path='pictures\carlos_perez_paco_1_flair.nii'
+OUT_INPUT_DIR = "data/segmentations/"
+#OUT_INPUT_DIR = f"data/segmentations/" + os.path.basename(flair_path)+"/"
 
+
+
+
+
+#--------------------------METRICAS DE EVALUACION---------------
 def dice_coef(y_true, y_pred, smooth=100):
     y_true_f = tf.keras.backend.flatten(y_true)
     y_pred_f = tf.keras.backend.flatten(y_pred)
@@ -86,77 +107,207 @@ custom_objects = {
 
 
 # ——— Función de carga del modelo ———
-def load_model(model_path: str):
+def load_model(model_path: str,weights_path: str):
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model not found: {model_path}")
-    model = tf.keras.models.load_model(model_path, custom_objects=custom_objects)
+    model = tf.keras.models.load_model(model_path, custom_objects=custom_objects,compile=False)
+    if not os.path.exists(weights_path):
+        raise FileNotFoundError(f"Weights not found: {weights_path}")
+    model.load_weights(weights_path)
     logger.info(f"Model loaded successfully from {model_path}")
     return model
 
 
 
-def preprocess_nifti_for_prediction(image_path_t1ce,image_path_flair, seg_path=None, target_size=(128, 128)):
-    """
-    Carga y preprocesa un par de imágenes NIfTI (T1CE y FLAIR) para la predicción.
-    Opcionalmente, carga la máscara de segmentación si está disponible para comparación.
 
-    Args:
-        image_path_t1ce (str): Ruta al archivo .nii de la imagen T1CE.
-        image_path_flair (str): Ruta al archivo .nii de la imagen FLAIR.
-        seg_path (str, optional): Ruta al archivo .nii de la máscara de segmentación (verdad fundamental).
-                                  Necesario si quieres visualizar la verdad fundamental.
-        target_size (tuple): Tamaño (alto, ancho) al que se redimensionarán las rebanadas.
+def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
+    """Muestra 6 figuras independientes (FLAIR, GT, pred y clases) para un slice."""
 
-    Returns:
-        tuple: (processed_volume_3d, seg_volume_3d_categorical)
-               - processed_volume_3d: Volumen 3D preprocesado (alto, ancho, profundidad, canales).
-                                       Listo para extraer rebanadas.
-               - seg_volume_3d_categorical: Máscara 3D categórica (alto, ancho, profundidad).
-                                            None si seg_path no se proporciona.
-    """
-    # Cargar imágenes
-    img_t1ce = nib.load(image_path_t1ce).get_fdata()
-    img_flair = nib.load(image_path_flair).get_fdata()
+    os.makedirs(OUT_INPUT_DIR, exist_ok=True)
 
-    # Normalizar imágenes
-    scaler = MinMaxScaler()
-    img_t1ce = scaler.fit_transform(img_t1ce.reshape(-1, img_t1ce.shape[-1])).reshape(img_t1ce.shape)
-    img_flair = scaler.fit_transform(img_flair.reshape(-1, img_flair.shape[-1])).reshape(img_flair.shape)
 
-    processed_volume = np.stack([img_t1ce, img_flair], axis=-1) # (depth, height, width, channels)
+    png_input     = os.path.join( OUT_INPUT_DIR+f"Imagen_Cerebral_slice_{SELECTED_SLICE_IDX}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png"))
 
-    num_slices = processed_volume.shape[2]
-    resized_volume = np.zeros((target_size[0], target_size[1], num_slices, processed_volume.shape[3]), dtype=np.float32)
+    png_mask = (OUT_INPUT_DIR+"Resultado_segmentacion_"
+    + os.path.basename(flair_path).replace("_flair.nii", ".png"))
 
-    for i in range(num_slices):
-        slice_t1ce = tf.image.resize(processed_volume[:, :, i, 0][..., tf.newaxis], target_size)
-        slice_flair = tf.image.resize(processed_volume[:, :, i, 1][..., tf.newaxis], target_size)
-        resized_volume[:, :, i, 0] = slice_t1ce[:, :, 0]
-        resized_volume[:, :, i, 1] = slice_flair[:, :, 0]
 
-    seg_volume_categorical = None
-    if seg_path:
-        seg = nib.load(seg_path).get_fdata()
-        seg = seg.astype(np.uint8)
+    png_overlay = ( OUT_INPUT_DIR+"Resultado_segmentacion_superpuesto_"
+    + os.path.basename(flair_path).replace("_flair.nii", ".png"))
 
-        # Reasignar la clase 4 a 3 (crucial)
-        seg[seg==4] = 3
 
-        resized_seg = np.zeros(target_size + (num_slices,), dtype=np.uint8)
-        for i in range(num_slices):
-            resized_seg[:, :, i] = tf.image.resize(seg[:, :, i][..., tf.newaxis], target_size, method='nearest')[:, :, 0]
-        seg_volume_categorical = resized_seg
 
-    return resized_volume, seg_volume_categorical         # tensor
+    core = p[:,:,:,1]
+    edema= p[:,:,:,2]
+    enhancing = p[:,:,:,3]
 
-# ——— Herramienta de clasificación ———
+
+
+    k = start_slice + VOLUME_START_AT  
+    ups = 4  # factor de escala para la vista
+    flair_vis = cv2.resize(flair[:, :, k],(IMG_SIZE*ups, IMG_SIZE*ups),
+            interpolation=cv2.INTER_CUBIC) 
+    mask_all = cv2.resize(p[start_slice, :, :, 1:4],(IMG_SIZE*ups,IMG_SIZE*ups),
+            interpolation=cv2.INTER_NEAREST) 
+    mask_core = cv2.resize(core[start_slice,:,:],(IMG_SIZE*ups, IMG_SIZE*ups),
+            interpolation=cv2.INTER_NEAREST)
+    mask_edema = cv2.resize(edema[start_slice,:,:],(IMG_SIZE*ups, IMG_SIZE*ups),
+            interpolation=cv2.INTER_NEAREST)
+    mask_enhancing = cv2.resize(enhancing[start_slice,:,:],(IMG_SIZE*ups,IMG_SIZE*ups),interpolation=cv2.INTER_NEAREST)
+
+
+
+
+    # corte real en el volumen
+    flair_2d = cv2.resize(flair[:, :, k], (IMG_SIZE, IMG_SIZE))
+
+
+    #gt_2d    = cv2.resize(gt[:, :, k],    (IMG_SIZE, IMG_SIZE), interpolation=cv2.INTER_NEAREST)
+
+
+    # 1) FLAIR original
+    # plt.figure(figsize=(6, 6), dpi=200)
+    # plt.imshow(flair_2d, cmap='gray')
+    # plt.title('Original FLAIR')
+    # plt.axis('off')
+    # plt.savefig(png_input, bbox_inches='tight', pad_inches=0)
+
+    plt.figure(figsize=(6, 6), dpi=200)
+    plt.imshow(flair_vis, cmap='gray',interpolation='bilinear')
+    plt.title('Original FLAIR 2')
+    plt.axis('off')
+    plt.savefig(png_input, bbox_inches='tight', pad_inches=0)
+    plt.close() 
+    
+    # 2) Ground-truth
+    if False:
+        plt.figure(figsize=(4,4))
+        plt.imshow(flair_2d, cmap='gray')
+        plt.imshow(gt_2d, cmap='Reds', alpha=0.3, interpolation='none')
+        plt.title('Ground truth')
+        plt.axis('off')
+
+    # 3) All Clases
+    # plt.figure(figsize=(6, 6), dpi=200)
+    # plt.imshow(flair_2d, cmap='gray')
+    # plt.imshow(p[start_slice,:,:,1:4], cmap='Reds', alpha=0.3, interpolation='none')
+    # plt.title('All classes predicted')
+    # plt.axis('off')
+    # plt.savefig(png_overlay, bbox_inches='tight', pad_inches=0)
+
+    plt.figure(figsize=(6, 6), dpi=200)
+    plt.imshow(flair_vis, cmap='gray', interpolation='bilinear')
+    plt.imshow(mask_all, cmap='Reds', alpha=0.3, interpolation='nearest')
+    plt.title('All classes predicted')
+    plt.axis('off')
+    plt.savefig(png_overlay, bbox_inches='tight', pad_inches=0)
+    plt.close() 
+
+
+    # 4) Core
+    # plt.figure(figsize=(4,4))
+    # plt.imshow(flair_2d, cmap='gray')
+    # plt.imshow(core[start_slice,:,:], cmap='Reds', alpha=0.3, interpolation='none')
+
+    plt.figure(figsize=(6, 6), dpi=200)
+    plt.imshow(flair_vis, cmap='gray', interpolation='bilinear')
+    plt.imshow(mask_core, cmap='Reds', alpha=0.3, interpolation='nearest')
+    plt.title(f'{SEGMENT_CLASSES[1]} predicted')
+    plt.axis('off')
+
+
+    # 4) Edema
+    # plt.figure(figsize=(4,4))
+    # plt.imshow(flair_2d, cmap='gray')
+    # plt.imshow(edema[start_slice,:,:], cmap='Reds', alpha=0.3, interpolation='none')
+    plt.figure(figsize=(6, 6), dpi=200)
+    plt.imshow(flair_vis, cmap='gray', interpolation='bilinear')
+    plt.imshow(mask_edema, cmap='Reds', alpha=0.3, interpolation='nearest')
+    plt.title(f'{SEGMENT_CLASSES[2]} predicted')
+    plt.axis('off')
+    plt.savefig(png_mask, bbox_inches='tight', pad_inches=0)
+    plt.close() 
+
+    # 4) enhancing
+    # plt.figure(figsize=(4,4))
+    # plt.imshow(flair_2d, cmap='gray')
+    # plt.imshow(enhancing[start_slice,:,:], cmap='Reds', alpha=0.3, interpolation='none')
+    plt.figure(figsize=(6, 6), dpi=200)
+    plt.imshow(flair_vis, cmap='gray', interpolation='bilinear')
+    plt.imshow(mask_enhancing, cmap='Reds', alpha=0.3, interpolation='nearest')    
+    plt.title(f'{SEGMENT_CLASSES[3]} predicted')
+    plt.axis('off')
+
+
+    #plt.show()
+
+
+
+    figures = [
+        ("Original FLAIR",                     flair_2d,                    None),
+        ("All classes predicted",              p[start_slice, :, :, 1:4],   None),
+        (f'{SEGMENT_CLASSES[1]} predicted',    core[start_slice, :, :],     None),
+        (f'{SEGMENT_CLASSES[2]} predicted',    edema[start_slice, :, :],    None),
+        (f'{SEGMENT_CLASSES[3]} predicted',    enhancing[start_slice, :, :],None),
+    ]
+
+
+    return png_input, png_mask, png_overlay
+
+
+
+
+
+
+
+
+
+
+def show_predicted_segmentations(p,slice_to_plot=SELECTED_SLICE_IDX):
+
+    predicted_seg=p
+    all = predicted_seg[slice_to_plot,:,:,1:4] # Deletion of class 0 (Keep only Core + Edema + Enhancing classes)
+    zero = predicted_seg[slice_to_plot,:,:,0] # Isolation of class 0, Background (kind of useless, it is the opposite of the "all")
+    core = predicted_seg[slice_to_plot,:,:,1] # Isolation of class 1, Core
+    edema = predicted_seg[slice_to_plot,:,:,2] # Isolation of class 2, Edema
+    enhancing = predicted_seg[slice_to_plot,:,:,3] # Isolation of class 3, Enhancing
+
+    plt.figure(figsize=(6, 6), dpi=200)
+    plt.imshow(all, cmap='gray')
+    plt.title(f'Predicted Segmentation - All classes predicted')
+    plt.axis('off')
+
+    plt.figure(figsize=(4,4))
+    plt.imshow(core, cmap, norm)
+    plt.title(f'Predicted Segmentation - {SEGMENT_CLASSES[1]} predicted')
+    plt.axis('off')
+
+    plt.figure(figsize=(4,4))
+    plt.imshow(edema, cmap, norm)
+    plt.title(f'Predicted Segmentation - {SEGMENT_CLASSES[2]} predicted')
+    plt.axis('off')
+
+    plt.figure(figsize=(4,4))
+    plt.imshow(enhancing, cmap='gray')
+    plt.title(f'Predicted Segmentation - {SEGMENT_CLASSES[3]} predicted')
+    plt.axis('off')
+    #plt.show()
+
+    return None
+
+
+
+
+
+
+# ——— Herramienta de Segmentacion ———
 @tool(
     name="segmenter_tumor_from_image",
     description="Segmenta un tumor cerebral a partir de imágenes FLAIR y T1CE.",
 )
 def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
     """
-    Clasifica una única imagen. NO BUSCA ficheros: espera recibir
+    Segmenta una única imagen. NO BUSCA ficheros: espera recibir
     la ruta exacta al archivo de imagen.
 
     Args:
@@ -172,122 +323,24 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
             logger.error(err)
             return json.dumps({"error": err})
     try:
-        model = load_model(MODEL_PATH)
+        model = load_model(MODEL_PATH, WEIGHTS_PATH)
         
-        processed_volume, seg_truth_volume_categorical = preprocess_nifti_for_prediction(
-            #image_t1ce_path,
-            image_path_t1ce=t1ce_path,
-            image_path_flair=flair_path,
-            #seg_path=segmentation_truth_path,
-            target_size=(IMG_SIZE, IMG_SIZE)
-        )
-        selected_slice_idx = 95
-        input_slice = processed_volume[:, :, selected_slice_idx, :][np.newaxis, ...]
 
-        OUT_INPUT_DIR = "data/segmentations"
-        os.makedirs(OUT_INPUT_DIR, exist_ok=True)
-        slice_idx     = selected_slice_idx       # ya lo tenías en 95
-        png_input     = os.path.join(
-            "data/segmentations/"+f"Imagen_Cerebral_slice_{slice_idx}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png")
-        )
+        X = np.empty((VOLUME_SLICES, IMG_SIZE, IMG_SIZE, 2))
+        flair=nib.load(t1ce_path).get_fdata()
+        t1ce=nib.load(flair_path).get_fdata()
 
-        plt.figure(figsize=(6, 6), dpi=200)      # 300 dpi → imagen grande y nítida
-        plt.imshow(input_slice[0, :, :, 1], cmap="gray", vmin=0, vmax=1)  # canal 1 = FLAIR
-        plt.title(f"FLAIR – Slice {slice_idx}")
-        plt.axis("off")
-        plt.tight_layout()
-        plt.savefig(png_input, bbox_inches='tight', pad_inches=0)
-        plt.close()
+        for j in range(VOLUME_SLICES):
+            X[j,:,:,0] = cv2.resize(flair[:,:,j+VOLUME_START_AT], (IMG_SIZE,IMG_SIZE))
+            X[j,:,:,1] = cv2.resize(t1ce[:,:,j+VOLUME_START_AT], (IMG_SIZE,IMG_SIZE))
+
+        p = model.predict(X/np.max(X), verbose=1)
 
 
-        print(f"Realizando predicción para la rebanada {selected_slice_idx}...")
-        predicted_output = model.predict(input_slice)
-        predicted_mask_categorical = np.argmax(predicted_output, axis=-1)[0]
-        rgb_mask = PALETTE[predicted_mask_categorical]
-        cmap = ListedColormap(['black', 'red', 'green', 'blue']) # 0: Fondo, 1: Necrótico, 2: Edema, 3: Realzante
-        norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N) # Límite para 4 clases
-
-        legend_elements = [
-            Patch(facecolor='black', edgecolor='black', label='Background'),
-            Patch(facecolor='red', edgecolor='red', label='Necrotic (Class 1)'),
-            Patch(facecolor='green', edgecolor='green', label='Edema (Class 2)'),
-            Patch(facecolor='blue', edgecolor='blue', label='Enhancing (Class 3)')
-        ]
-
-        #plt.imshow(predicted_mask_categorical, cmap=cmap, norm=norm)
-        #plt.title(f'Predicted Mask - Slice {selected_slice_idx}')
-        #plt.legend(handles=legend_elements, loc='lower left', bbox_to_anchor=(0.0, -0.3))
-       # plt.axis('off')
+        png_input, png_mask,png_overlay=showPredicts(p,flair,flair_path)
+        show_predicted_segmentations(p)
 
 
-
-        #rgba = plt.cm.get_cmap("jet")(predicted_mask_categorical / 3.0)
-
-        # 2. Conviértelo a RGB uint8 (descarta alfa)
-        #rgb  = (rgba[...,:3] * 255).astype(np.uint8)        # (H,W,3) uint8
-
-        # 3. Asegura carpeta y guarda con Pillow
-        #os.makedirs("data/segmentations", exist_ok=True)
-        #png_name = ("data/segmentations/Resultado_segmentacion_"+ os.path.basename(flair_path).replace("_flair.nii", ".png"))
-
-        #plt.figure(figsize=(6,6), dpi=200)
-        #plt.imshow(predicted_mask_categorical, cmap=cmap, norm=norm)
-        #plt.title(f'Predicted Mask - Slice {selected_slice_idx}')
-        #plt.legend(handles=legend_elements, loc='lower left', bbox_to_anchor=(0.0, -0.3))
-        #plt.axis("off")
-        #plt.tight_layout()
-        #plt.savefig(png_name, bbox_inches="tight", pad_inches=0)
-
-        #rgb_mask = PALETTE[predicted_mask_categorical]
-        #Image.fromarray(rgb_mask).save(png_name, format="PNG")
-        #logger.info(f"Segmentación guardada como: {png_name}")
-
-
-        legend_cfg = dict(
-            handles=legend_elements,
-            loc='lower left',
-            frameon=True,      # muestra recuadro
-            facecolor='white', # fondo blanco → contrasta
-            edgecolor='white',
-            fontsize=8
-        )
-
-
-# ---------- FIGURA: máscara con leyenda ----------------
-        fig_mask, ax_mask = plt.subplots(figsize=(6, 6), dpi=200)
-        ax_mask.imshow(rgb_mask)           # muestra ya la máscara en RGB
-        ax_mask.axis('off')                # sin ejes/ticks
-        ax_mask.legend(**legend_cfg)
-        ax_mask.set_title(f'Predicted Mask – Slice {selected_slice_idx}') 
-        png_mask = (
-            "data/segmentations/Resultado_segmentacion_"
-            + os.path.basename(flair_path).replace("_flair.nii", ".png")
-        )
-
-        fig_mask.tight_layout(pad=0)
-        fig_mask.savefig(png_mask, bbox_inches='tight', pad_inches=0)
-        plt.show()
-
-        logger.info(f"Segmentación guardada en {png_mask}")
-
-
-
-
-# ---------- FIGURA: superposición ----------------------
-        fig_ovl, ax_ovl = plt.subplots(figsize=(6, 6), dpi=200)
-        ax_ovl.imshow(input_slice[0, :, :, 1], cmap='gray', vmin=0, vmax=1)
-        ax_ovl.imshow(rgb_mask, alpha=0.50)      # 35 % de transparencia
-        ax_ovl.axis('off')
-        ax_ovl.legend(**legend_cfg)
-        ax_ovl.set_title('Imágenes superpuestas')
-        fig_ovl.tight_layout(pad=0)
-        
-        png_overlay = (
-            "data/segmentations/Resultado_segmentacion_superpuesto_"
-            + os.path.basename(flair_path).replace("_flair.nii", ".png")
-            )
-        fig_ovl.savefig(png_overlay, bbox_inches='tight', pad_inches=0)
-        plt.show()
         return json.dumps({
             "input_slice": png_input,
             "mask_file"  : png_mask,
@@ -297,3 +350,17 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
     except Exception as e:
         logger.error(f"Segmentación error: {e}", exc_info=True)
         return json.dumps({"error": str(e)})
+
+
+
+# if __name__ == "__main__":
+#     import argparse, sys, json
+
+#     flair_path="data/pictures/lucia_rodriguez_1_flair.nii"
+#     t1ce_path="data/pictures/lucia_rodriguez_1_t1ce.nii"
+#     result = segmenter_tumor_from_image(flair_path, t1ce_path)
+#     # Pretty-print JSON result or error
+#     try:
+#         print(json.dumps(json.loads(result), indent=2, ensure_ascii=False))
+#     except Exception:
+#         print(result)

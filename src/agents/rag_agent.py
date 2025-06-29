@@ -4,6 +4,7 @@ import json
 from src.config.config import strands_model_mini
 from src.config.prompts import rag_system_prompt
 from src.tools.rag_tool import rag_tool
+from src.tools.file_system_tools import write_file_to_local
 
 @tool()
 def rag_agent(query: str) -> str:
@@ -25,11 +26,12 @@ def rag_agent(query: str) -> str:
         rag_agent = Agent(
             model=strands_model_mini,
             tools=[
-                rag_tool
+                rag_tool,
+                write_file_to_local
             ],
             system_prompt=rag_system_prompt
         )
-        return str(rag_agent(query))
+        return rag_agent(query)
     except Exception as e:
         return json.dumps({
             "error": str(e)

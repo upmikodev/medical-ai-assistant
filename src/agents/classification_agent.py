@@ -6,45 +6,34 @@ from src.config.prompts import clasificacion_system_prompt
 from src.tools.execute_brain_tumor_classifier import classify_tumor_from_image
 from src.tools.file_system_tools import read_file_from_local, write_file_to_local
 
+
 @tool()
-def clasificacion_agent(patient_data: str) -> str:
+def clasificacion_agent(input_file: str = "data/temp/lister.json") -> str:
     """
-    El LLM recibe los datos del paciente y sus escaneos, recorre la lista `scans`
-    y llama a `classify_tumor_from_image` para cada par FLAIR+T1CE.
+    El LLM leerá `data/temp/lister.json`, recorrerá la lista `scans`
+    y llamará a `classify_tumor_from_pair` para cada par FLAIR+T1CE.
+    No necesita argumentos de entrada.
     
     Args:
-        patient_data (str): JSON string con los datos del paciente y sus escaneos (normalmente de `temp/lister.json`).
+        dummy (str): Dummy argument to match the tool signature.
 
     Tools:
         - classify_tumor_from_image
+        - read_file_from_local
         - write_file_to_local
 
     """
     try:
-        data = json.loads(patient_data)
-        patient_identifier = data.get("patient_identifier", "unknown")
-        scans = data.get("scans", [])
-
-        if not scans:
-            return json.dumps({"patient_identifier": patient_identifier, "error": "No se encontraron imágenes para clasificar."})
-
-        classifications = []
-        for scan in scans:
-            flair_path = scan.get("flair_path")
-            t1ce_path = scan.get("t1ce_path")
-            scan_id = scan.get("scan_id", "unknown_scan")
-
-            if flair_path and t1ce_path:
-                result = classify_tumor_from_image(flair_path=flair_path, t1ce_path=t1ce_path)
-                classifications.append({"scan_id": scan_id, "result": json.loads(result)})
-            else:
-                classifications.append({"scan_id": scan_id, "result": {"error": "Rutas de imagen incompletas."}})
-
-        final_result = {"patient_identifier": patient_identifier, "classifications": classifications}
-        
-        # Save results to temp/classification.json
-        write_file_to_local(path="data/temp/classification.json", content=json.dumps(final_result))
-
-        return json.dumps(final_result)
+        # Extract last names to build path
+        classifier_agent = Agent(
+            model=strands_model_mini,
+            tools=[
+            classify_tumor_from_image,
+            read_file_from_local,
+            write_file_to_local,
+            ],
+            system_prompt=clasificacion_system_prompt
+        )
+        return classifier_agent("")
     except Exception as e:
         return json.dumps({"error": str(e)})

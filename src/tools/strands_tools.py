@@ -1,3 +1,5 @@
+
+
 from asyncio.log import logger
 import os
 import json
@@ -165,7 +167,7 @@ def classify_single_image_tool(image_path: str) -> str:
     logger.info(f"Tool: Classifying single image at: {image_path}")
     try:
         # classify_tumor_from_image_or_patient_id can handle direct image paths
-        result = classify_tumor_from_image_or_patient_id(image_path)
+        result = classify_tumor_from_image(image_path)
         logger.info(f"Tool: Classification result for '{image_path}': {result}")
         return json.dumps(result)
     except Exception as e:
@@ -183,7 +185,7 @@ if __name__ == '__main__':
         f.write("Another one!")
     
     print("Testing list_files_in_dir...")
-    files_json = list_files_in_dir("./test_dir", prefix="sample")
+    files_json = list_files_in_dir("./test_dir")
     print(json.loads(files_json))
 
     print("\nTesting read_file_from_local...")
@@ -201,13 +203,13 @@ if __name__ == '__main__':
     # Ensure strands_model_nano is usable for this test, might need to init config here if run standalone
     if strands_model_nano:
         # Create dummy patient images for testing
-        if not os.path.exists("pictures"):
-            os.makedirs("pictures")
+        if not os.path.exists("data/pictures"):
+            os.makedirs("data/pictures")
         dummy_patient_id = "test_patient_alpha"
-        with open(f"pictures/{dummy_patient_id}_1.png", "w") as f: f.write("dummy_png_content_1")
-        with open(f"pictures/{dummy_patient_id}_2.jpg", "w") as f: f.write("dummy_jpg_content_2")
-        with open(f"pictures/other_file.txt", "w") as f: f.write("not_an_image")
-        with open(f"pictures/{dummy_patient_id}_config.json", "w") as f: f.write("{}")
+        with open(f"data/pictures/{dummy_patient_id}_1.png", "w") as f: f.write("dummy_png_content_1")
+        with open(f"data/pictures/{dummy_patient_id}_2.jpg", "w") as f: f.write("dummy_jpg_content_2")
+        with open(f"data/pictures/other_file.txt", "w") as f: f.write("not_an_image")
+        with open(f"data/pictures/{dummy_patient_id}_config.json", "w") as f: f.write("{}")
 
         found_images_json = find_patient_images_tool(patient_identifier=dummy_patient_id)
         print(f"Found images for '{dummy_patient_id}': {json.loads(found_images_json)}")
@@ -217,7 +219,7 @@ if __name__ == '__main__':
     # Test classify_single_image_tool (this will likely use dummy/error if model/image not fully set up)
     print("\nTesting classify_single_image_tool...")
     # Assume a dummy image path for testing if the above didn't create it
-    dummy_image_for_classification = f"pictures/{dummy_patient_id}_1.png"
+    dummy_image_for_classification = f"data/pictures/{dummy_patient_id}_1.png"
     if not os.path.exists(dummy_image_for_classification) and strands_model_nano: # only create if prev test ran
          with open(dummy_image_for_classification, "w") as f: f.write("dummy_png_content_for_classify_tool")
     
@@ -226,3 +228,4 @@ if __name__ == '__main__':
         print(f"Classification for '{dummy_image_for_classification}': {json.loads(classification_result_json)}")
     else:
         print(f"Skipping classify_single_image_tool test, dummy image '{dummy_image_for_classification}' not found.")
+

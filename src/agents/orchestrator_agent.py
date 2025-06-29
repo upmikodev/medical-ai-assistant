@@ -1,3 +1,4 @@
+import re
 from strands import Agent
 from strands.tools import tool
 import uuid
@@ -24,23 +25,12 @@ def orchestrator_agent(query: str) -> str:
         # Step 1: Plan the execution
         print("Tool #1: planner_agent")
         plan_response = planner_agent(query)
-        print(str(plan_response))
-
-        # Assuming the plan_response contains the patient identifier
-        # This part needs to be more robust if planner_agent output format changes
-        patient_identifier_match = None
-        # Regex to find the name after "paciente" and before the next parenthesis
-        match = re.search(r'paciente\s*"([\w\s]+)"', plan_response)
-        if not match:
-            match = re.search(r'paciente\s+([\w\s]+?)(?=\s*para|\s*\()', plan_response)
-        if not match:
-            match = re.search(r'paciente\s*:\s*"([\w\s]+)"', plan_response)
+        # New regex to specifically target 'patient_name: "..."'
+        match = re.search(r'paciente = "([^"]+)"', plan_response)
         if match:
             patient_name = match.group(1).strip()
-            # Replace spaces with underscores for the identifier
             patient_identifier_match = patient_name.replace(" ", "_")
-        
-        if not patient_identifier_match:
+        else:
             return json.dumps({"error": "Could not extract patient identifier from planner response."})
 
         # Step 2: Image Listing
@@ -50,7 +40,7 @@ def orchestrator_agent(query: str) -> str:
 
         # Read the output of image_lister_agent from temp/lister.json
         print("Reading temp/lister.json...")
-        lister_output_json = read_file_from_local(path="temp/lister.json")
+        lister_output_json = read_file_from_local(path="data/temp/lister.json")
         lister_data = json.loads(json.loads(lister_output_json)["content"])
         print(f"Lister data: {lister_data}")
         

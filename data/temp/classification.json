@@ -1,1 +1,1 @@
-{"patient_identifier":"carlos_perez_paco","classifications":[{"scan_id":"carlos_perez_paco_1","result":{"p_tumor":0.9013265371322632}}]}
+{"patient_identifier": "lucia_rodriguez", "classifications": [{"scan_id": "lucia_rodriguez_1", "result": {"prediction": "Tumor", "probabilities": {"No tumor": 0.05237739905714989, "Tumor": 0.9476225972175598}}}]}

@@ -16,7 +16,7 @@ def image_lister_agent(patient_identifier: str) -> str:
     
     Tools: 
         - list_files_in_dir(path="data/pictures/"): Lists files in the specified directory.
-        - write_file_to_local(path="temp/lister.json", content=json_string): Writes the JSON string to a local file.
+        - write_file_to_local(path="data/temp/lister.json", content=json_string): Writes the JSON string to a local file.
         
     Returns:
         str: JSON string containing patient_identifier and list of image paths or error

@@ -43,7 +43,7 @@ def segmentator_agent(patient_data: str) -> str:
         final_result = {"patient_identifier": patient_identifier, "segmentations": segmentations}
         
         # Save results to temp/segmentation.json
-        write_file_to_local(path="temp/segmentation.json", content=json.dumps(final_result))
+        write_file_to_local(path="data/temp/segmentation.json", content=json.dumps(final_result))
 
         return json.dumps(final_result)
     except Exception as e:

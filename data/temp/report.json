@@ -3,7 +3,7 @@
   "nombre": "Lucía Rodríguez",
   "edad": 45,
   "fecha": "2025-06-12",
-  "motivo_consulta": "Accidente cerebrovascular isquemico",
+  "motivo_consulta": "Accidente cerebrovascular isquémico",
 
   "tumor_prob": 0.977,
   "tumor_resultado": "tumor",
@@ -15,10 +15,17 @@
   "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
   "overlay_file": "data/segmentations/Resultado_segmentacion_superpuesto_lucia_rodriguez_1.png",
 
+<<<<<<< HEAD
   "resumen_historial": "- Debilidad subita en el hemicuerpo derecho.\n- Dificultad en el habla y comprension disminuida.\n- Factores de riesgo: hipertension y tabaquismo.\n- Lesion hipodensa en la region parietal izquierda.\n- Demora en perfusion de la arteria cerebral media.\n- Diagnostico: I63.9 - Infarto cerebral no especificado.\n- Recomendaciones: Iniciar trombolisis intravenosa. Control estricto de la presion arterial. Rehabilitacion neurologica temprana.",
 
   "riesgo": "NO DISPONIBLE",
   "justificacion_triaje": "Información clínica insuficiente para determinar el nivel de prioridad.",
+=======
+  "resumen_historial": "Accidente cerebrovascular isquémico con debilidad súbita en el hemicuerpo derecho, dificultad en el habla y comprensión disminuida. Factores de riesgo: hipertensión y tabaquismo. Lesión hipodensa en la región parietal izquierda con demora en perfusión de la arteria cerebral media. Diagnóstico I63.9 - Infarto cerebral no especificado. Recomendaciones: trombólisis intravenosa, control estricto de la presión arterial y rehabilitación neurológica temprana.",
+
+  "riesgo": "alto",
+  "justificacion_triaje": "Paciente con infarto cerebral isquémico agudo (lesión en región parietal izquierda, demora en perfusión de arteria cerebral media) y síntomas neurológicos recientes y graves (debilidad del hemicuerpo derecho, dificultad en el habla y comprensión disminuida). Además, presenta factores de riesgo significativos (hipertensión y tabaquismo). Se requiere atención médica urgente para trombólisis y manejo especializado.",
+>>>>>>> origin/fix/llm_jj
 
   "comentario_final_sobre_el_caso": "NO DISPONIBLE",
 

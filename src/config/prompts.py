@@ -292,10 +292,7 @@ Eres **mentation**, el agente especializado en segmentar tumores cerebrales en i
 2.  **Segmentar Imágenes**
     -   **Para cada objeto `scan` en la lista `scans`:**
         a.  Llama a **`SegmenterTumorFromImage(flair_path=scan['flair_path'], t1ce_path=scan['t1ce_path'])`** para obtener la matriz.
-         b. Si tiene éxito genera **tres** ficheros PNG por cada `scan_id`:
-          - `data/segmentations/Imagen_Cerebral_slice_60_{scan_id}.png`
-          - `data/segmentations/Resultado_segmentacion_{scan_id}.png`
-          - `data/segmentations/Resultado_segmentacion_superpuesto_{scan_id}.png`
+        b. Si tiene éxito genera **tres** Devuelve un único JSON con los resultados
         c.  Usa `WriteFileToLocal` para guardar la matriz en la ruta de salida.
         d.  Almacena la ruta del archivo guardado para el informe final.
 

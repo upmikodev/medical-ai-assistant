@@ -40,7 +40,7 @@ PALETTE = np.array([
 
 SEGMENT_CLASSES = {
     0 : 'NOT tumor',
-    1 : 'NECROTIC/CORE', # or NON-ENHANCING tumor CORE
+    1 : 'NECROTIC-CORE', # or NON-ENHANCING tumor CORE
     2 : 'EDEMA',
     3 : 'ENHANCING' # original 4 -> converted into 3
 }
@@ -126,16 +126,6 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     os.makedirs(OUT_INPUT_DIR, exist_ok=True)
 
 
-    png_input     = os.path.join( OUT_INPUT_DIR+f"Imagen_Cerebral_slice_{SELECTED_SLICE_IDX}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png"))
-
-    png_mask = (OUT_INPUT_DIR+"Resultado_segmentacion_"
-    + os.path.basename(flair_path).replace("_flair.nii", ".png"))
-
-
-    png_overlay = ( OUT_INPUT_DIR+"Resultado_segmentacion_superpuesto_"
-    + os.path.basename(flair_path).replace("_flair.nii", ".png"))
-
-
 
     core = p[:,:,:,1]
     edema= p[:,:,:,2]
@@ -174,8 +164,9 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
 
     plt.figure(figsize=(6, 6), dpi=200)
     plt.imshow(flair_vis, cmap='gray',interpolation='bilinear')
-    plt.title('Original FLAIR 2')
+    plt.title('Original FLAIR ')
     plt.axis('off')
+    png_input = os.path.join( OUT_INPUT_DIR+f"Imagen_Cerebral_slice_{SELECTED_SLICE_IDX}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png"))
     plt.savefig(png_input, bbox_inches='tight', pad_inches=0)
     plt.savefig(png_mask, bbox_inches='tight', pad_inches=0)  # <<--- ESTE ES NECESARIO
     plt.close() 
@@ -201,6 +192,8 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     plt.imshow(mask_all, cmap='Reds', alpha=0.3, interpolation='nearest')
     plt.title('All classes predicted')
     plt.axis('off')
+    png_overlay = ( OUT_INPUT_DIR+"Resultado_segmentacion_superpuesto_"
+    + os.path.basename(flair_path).replace("_flair.nii", ".png"))
     plt.savefig(png_overlay, bbox_inches='tight', pad_inches=0)
     plt.close() 
 
@@ -215,6 +208,10 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     plt.imshow(mask_core, cmap='Reds', alpha=0.3, interpolation='nearest')
     plt.title(f'{SEGMENT_CLASSES[1]} predicted')
     plt.axis('off')
+    png_core = os.path.join( OUT_INPUT_DIR+f"Resultado_segmentacion_{SEGMENT_CLASSES[1]}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png"))
+    plt.savefig(png_core, bbox_inches='tight', pad_inches=0)
+    
+    plt.axis('off')
 
 
     # 4) Edema
@@ -226,6 +223,7 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     plt.imshow(mask_edema, cmap='Reds', alpha=0.3, interpolation='nearest')
     plt.title(f'{SEGMENT_CLASSES[2]} predicted')
     plt.axis('off')
+    png_mask = (OUT_INPUT_DIR+"Resultado_segmentacion_" + os.path.basename(flair_path).replace("_flair.nii", ".png"))
     plt.savefig(png_mask, bbox_inches='tight', pad_inches=0)
     plt.close() 
 
@@ -237,6 +235,9 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     plt.imshow(flair_vis, cmap='gray', interpolation='bilinear')
     plt.imshow(mask_enhancing, cmap='Reds', alpha=0.3, interpolation='nearest')    
     plt.title(f'{SEGMENT_CLASSES[3]} predicted')
+    plt.axis('off')
+    png_enhancing = os.path.join( OUT_INPUT_DIR+f"Resultado_segmentacion_{SEGMENT_CLASSES[3]}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png"))
+    plt.savefig(png_enhancing, bbox_inches='tight', pad_inches=0)
     plt.axis('off')
 
 

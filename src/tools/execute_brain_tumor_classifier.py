@@ -117,7 +117,7 @@ def classify_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
         t1ce_vol  = nib.load(t1ce_path ).get_fdata()
         k         = flair_vol.shape[2] // 2
         print(flair_vol.shape[2] // 2)
-       # k=60
+        k=82
         flair_slice = flair_vol[:, :, k]
         t1ce_slice  = t1ce_vol [:, :, k]
 

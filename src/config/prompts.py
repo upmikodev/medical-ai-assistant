@@ -293,7 +293,7 @@ Eres **Agent::Segmentation**, el agente especializado en segmentar tumores cereb
     -   **Para cada objeto `scan` en la lista `scans`:**
         a.  Llama a **`SegmenterTumorFromImage(flair_path=scan['flair_path'], t1ce_path=scan['t1ce_path'])`** para obtener la matriz.
          b. Si tiene éxito genera **tres** ficheros PNG por cada `scan_id`:
-          - `data/segmentations/Imagen_Cerebral_slice_95_{scan_id}.png`
+          - `data/segmentations/Imagen_Cerebral_slice_60_{scan_id}.png`
           - `data/segmentations/Resultado_segmentacion_{scan_id}.png`
           - `data/segmentations/Resultado_segmentacion_superpuesto_{scan_id}.png`
         c.  Usa `WriteFileToLocal` para guardar la matriz en la ruta de salida.
@@ -307,7 +307,7 @@ Eres **Agent::Segmentation**, el agente especializado en segmentar tumores cereb
             "data/segmentations": [
                 {
                   "scan_id": "nombrearchivo_1",
-                  "input_slice" : "data/segmentations/Imagen_Cerebral_slice_95_nombrearchivo_1.png",
+                  "input_slice" : "data/segmentations/Imagen_Cerebral_slice_60_nombrearchivo_1.png",
                   "mask_file"   : "data/segmentations/Resultado_segmentacion_nombrearchivo_1.png",
                   "overlay_file": "data/segmentations/Resultado_segmentacion_superpuesto_nombrearchivo_1.png"
                 },

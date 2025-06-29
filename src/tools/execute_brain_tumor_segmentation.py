@@ -131,7 +131,7 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
 
 
     png_mask = (
-    OUT_INPUT_DIR+"Aleatorio_"
+    OUT_INPUT_DIR+"Resultado_segmentacion_"
     + os.path.basename(flair_path).replace("_flair.nii", ".png")
     )
 
@@ -158,7 +158,7 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     plt.imshow(flair_2d, cmap='gray')
     plt.title('Original FLAIR')
     plt.axis('off')
-    #plt.savefig(png_input, bbox_inches='tight', pad_inches=0)
+    plt.savefig(png_input, bbox_inches='tight', pad_inches=0)
 
     # 2) Ground-truth
     if False:
@@ -195,7 +195,7 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     plt.title(f'{SEGMENT_CLASSES[3]} predicted')
     plt.axis('off')
 
-    plt.show()
+    #plt.show()
 
 
 
@@ -247,7 +247,7 @@ def show_predicted_segmentations(p,slice_to_plot=SELECTED_SLICE_IDX):
     plt.imshow(enhancing, cmap='gray')
     plt.title(f'Predicted Segmentation - {SEGMENT_CLASSES[3]} predicted')
     plt.axis('off')
-    plt.show()
+    #plt.show()
 
     return None
 

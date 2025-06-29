@@ -177,6 +177,7 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     plt.title('Original FLAIR 2')
     plt.axis('off')
     plt.savefig(png_input, bbox_inches='tight', pad_inches=0)
+    plt.savefig(png_mask, bbox_inches='tight', pad_inches=0)  # <<--- ESTE ES NECESARIO
     plt.close() 
     
     # 2) Ground-truth
@@ -327,8 +328,8 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
         
 
         X = np.empty((VOLUME_SLICES, IMG_SIZE, IMG_SIZE, 2))
-        flair=nib.load(t1ce_path).get_fdata()
-        t1ce=nib.load(flair_path).get_fdata()
+        flair=nib.load(flair_path).get_fdata()
+        t1ce=nib.load(t1ce_path).get_fdata()
 
         for j in range(VOLUME_SLICES):
             X[j,:,:,0] = cv2.resize(flair[:,:,j+VOLUME_START_AT], (IMG_SIZE,IMG_SIZE))

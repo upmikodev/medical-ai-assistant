@@ -3,24 +3,24 @@ from strands.tools import tool
 import json
 from src.config.config import strands_model_mini
 from src.config.prompts import report_validator_system_prompt
-from src.tools.file_system_tools import read_file_from_local, write_file_to_local
+from src.tools.file_system_tools import write_file_to_local
+from src.tools.file_system_tools import read_file_from_local
+from src.tools.report_pdf_agent import generate_pdf_from_report
+from src.tools.extract_text_from_pdf import extract_text_from_pdf
 
 @tool()
-def report_validator_agent(report_path: str, classification_data: str, segmentation_results: str) -> str:
+def report_validator_agent(paths_json: str) -> str:
     """
-    Valida el informe clínico generado por `Agent::ReportWriter` comparándolo con los datos
-    oficiales producidos por el resto de agentes del sistema multiagente. Si se detectan errores,
-    inconsistencias o invenciones, reescribe automáticamente el informe utilizando únicamente los datos
-    originales y lo guarda como un nuevo archivo corregido.
-
-    Args:
-        report_path (str): Ruta al archivo markdown que contiene el informe original generado.
-        classification_data (str): JSON string con los resultados de clasificación.
-        segmentation_results (str): JSON string con los resultados de segmentación.
     
-    Tools:
-        - read_file_from_local(path: str): Lee el contenido del archivo markdown original.
-        - write_file_to_local(path: str, content: str): Guarda el informe corregido si es necesario.
+    Valida data/temp/report.json frente a los JSON fuente.
+    Si hace falta, genera data/temp/report_validated.json + PDF corregido.
+    
+    paths_json debe ser exactamente el diccionario que devuelve
+    ReportWriter, por ejemplo:
+    {
+      "report_json_path": "data/temp/report.json",
+      "report_pdf_path":  "reportes/lucia_2025-06-12.pdf"
+    }
 
     Returns:
         str: Un mensaje de validación:
@@ -28,46 +28,19 @@ def report_validator_agent(report_path: str, classification_data: str, segmentat
             - "VALIDACIÓN RECHAZADA: Se han detectado inconsistencias. Se ha generado una nueva versión corregida. Ruta del nuevo archivo: <ruta>"
     """
     try:
-        # Read the generated report
-        from src.tools.extract_text_from_pdf import extract_text_from_pdf
-        generated_report_content = extract_text_from_pdf(report_path)
-
-        # Parse the input data
-        classification_data_parsed = json.loads(classification_data)
-        segmentation_results_parsed = json.loads(segmentation_results)
-
-        # Perform validation logic here
-        # For simplicity, let's just check if the report contains some key info from classification and segmentation
-        is_valid = True
-        validation_message = "VALIDACIÓN APROBADA: El informe es fiel a los datos proporcionados."
-
-        # Example validation: Check if tumor prediction is mentioned if it was classified as tumor
-        if classification_data_parsed and classification_data_parsed.get("classifications"):
-            for cls in classification_data_parsed["classifications"]:
-                prediction = cls.get("result", {}).get("prediction")
-                if prediction == "Tumor" and "Resultado: Tumor" not in generated_report_content:
-                    is_valid = False
-                    validation_message = "VALIDACIÓN RECHAZADA: El informe no menciona el diagnóstico de tumor."
-                    break
-        
-        if is_valid and segmentation_results_parsed and segmentation_results_parsed.get("segmentations"):
-            for seg in segmentation_results_parsed["segmentations"]:
-                saved_mask = seg.get("result", {}).get("saved_mask")
-                if saved_mask and "Segmentación de imagen" not in generated_report_content:
-                    is_valid = False
-                    validation_message = "VALIDACIÓN RECHAZADA: El informe no menciona la segmentación de imagen."
-                    break
-
-        if not is_valid:
-            # If invalid, rewrite the report (simplified for this example)
-            # In a real scenario, you'd reconstruct the report based on original data
-            # For now, let's just indicate it's invalid and return the original path
-            return json.dumps({"validation_status": validation_message, "report_path": report_path})
-        
-        return json.dumps({"validation_status": validation_message, "report_path": report_path})
-
+        report_validator_agent = Agent(
+            model=strands_model_mini,
+            tools=[
+                read_file_from_local,
+                write_file_to_local,
+                generate_pdf_from_report,
+                extract_text_from_pdf
+            ],
+            system_prompt=report_validator_system_prompt
+        )
+        return report_validator_agent(paths_json)
     except Exception as e:
         return json.dumps({
-            "report_path": report_path,
+            "report_path": paths_json,
             "error": str(e)
         })

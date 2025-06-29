@@ -1,0 +1,34 @@
+{
+  "paciente_id": "lucia_rodriguez",
+  "nombre": "Lucía Rodríguez",
+  "edad": 45,
+  "fecha": "2025-06-12",
+  "motivo_consulta": "Accidente cerebrovascular isquemico",
+
+  "tumor_prob": 0.9476225972175598,
+  "tumor_resultado": "tumor",
+  "comentarios_clasificador": "Probabilidad alta de tumor detectada por el clasificador automático.",
+
+  "zona_afectada": "region parietal izquierda",
+  "volumen_cc": null,
+  "input_slice": "data/segmentations/Imagen_Cerebral_slice_95_lucia_rodriguez_1.png",
+  "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
+  "overlay_file": "data/segmentations/Resultado_segmentacion_superpuesto_lucia_rodriguez_1.png",
+
+  "resumen_historial": "- Debilidad subita en el hemicuerpo derecho.\n- Dificultad en el habla y comprension disminuida.\n- Factores de riesgo: hipertension y tabaquismo.\n- Lesion hipodensa en la region parietal izquierda.\n- Diagnostico: I63.9 - Infarto cerebral no especificado.",
+
+  "riesgo": "NO DISPONIBLE",
+  "justificacion_triaje": "NO DISPONIBLE",
+
+  "comentario_final_sobre_el_caso": "El sistema indica alta sospecha tumoral en la región parietal izquierda, con signos clínicos compatibles y sin datos de triaje disponibles.",
+
+  "scans": [
+    {
+      "scan_id": "lucia_rodriguez_1",
+      "flair_path": "data/pictures/lucia_rodriguez_1_flair.nii",
+      "t1ce_path": "data/pictures/lucia_rodriguez_1_t1ce.nii",
+      "p_tumor": 0.9476225972175598,
+      "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png"
+    }
+  ]
+}

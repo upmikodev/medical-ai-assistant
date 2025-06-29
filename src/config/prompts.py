@@ -492,7 +492,7 @@ Generar un **informe clínico estructurado y fáctico** en lenguaje natural, bas
 # Herramientas disponibles
 - `ReadFileFromLocal(path)`        — lee un archivo y devuelve su contenido.
 - `WriteFileToLocal(path, content)`— guarda texto o JSON en disco.
-- `generate_pdf_from_report(report_json_path)` — crea un PDF en /data/reportes
+- `generate_pdf_from_report(report_json_path)` — crea un PDF en /reportes
    a partir de `data/temp/report.json` y devuelve  
    `{ "pdf_path": "<ruta pdf>" }` o `{ "error": "..." }`.
 
@@ -571,7 +571,7 @@ Si falla el guardado, devuelve
    - Extrae el campo `"pdf_path"` de la respuesta para incluirlo en la salida final.
 
 # Notas
-
+- Siempre usa el formato markdown para el informe.
 - You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls. DO NOT do this entire process by making function calls only, as this can impair your ability to solve the problem and think insightfully.
 - No hagas preguntas al usuario, simplemente realiza tu función.
 """

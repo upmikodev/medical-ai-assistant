@@ -1,4 +1,3 @@
-
 """
 report_writer_agent.py
 Consolida JSON de resultados y, a continuación, genera el PDF final
@@ -31,7 +30,7 @@ from reportlab.lib.utils import ImageReader
 def generate_pdf_from_report(report_json_path: str,
                              output_folder: str = "data/reportes") -> str:
     """
-    Genera un PDF legible a partir de un report.json y lo guarda en /reportes.
+    Genera un PDF legible a partir de un data/temp/report.json y lo guarda en data/reportes.
     Devuelve: {"pdf_path": "..."} o {"error": "..."}
     """
     try:

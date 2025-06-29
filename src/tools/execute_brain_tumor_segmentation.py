@@ -12,12 +12,11 @@ from tensorflow.keras.models import load_model # <--- Esta es la clave
 from sklearn.preprocessing import MinMaxScaler # Para normalizar las imágenes
 from matplotlib.patches import Patch
 from matplotlib.colors import ListedColormap, BoundaryNorm
+import matplotlib
 from skimage.transform import resize
 from skimage.measure import find_contours
 #import matplotlib
 #matplotlib.use('TkAgg') 
-import matplotlib
-matplotlib.use('Agg')   # <- forzar backend “sin pantalla”
 import matplotlib.pyplot as plt
 # ——— Configuración básica ———
 logging.basicConfig(level=logging.INFO)

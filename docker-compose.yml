@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: tfm-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/data
+    networks:
+      - tfm-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: tfm-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - tfm-network
+
+networks:
+  tfm-network:
+    driver: bridge

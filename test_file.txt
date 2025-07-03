@@ -1,3 +1,0 @@
-'test content'  
-'another test'  
-'another test'  

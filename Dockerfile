@@ -1,21 +1,25 @@
-# Use an official Python runtime as a parent image
+# Imagen base ligera
 FROM python:3.10-slim
 
-# Set the working directory in the container
+# Directorio de trabajo
 WORKDIR /app
 
-# Copy the requirements file into the container at /app
+# Copiamos dependencias
 COPY requirements.txt .
 
-# Install any needed packages specified in requirements.txt
-RUN apt-get update && apt-get install -y git \ 
-    && pip install --no-cache-dir -r requirements.txt
+# Instalamos dependencias del sistema + python
+RUN apt-get update && apt-get install -y \
+    git \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && pip install --no-cache-dir -r requirements.txt \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copiamos el código completo del backend
+COPY . .
 
-# Make port 8000 available to the world outside this container
+# Puerto de exposición
 EXPOSE 8000
 
-# Run main.py when the container launches
-CMD ["python", "main.py"]
+# Arranca FastAPI con uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import runChat from "../config/gemini";
+import { runChatLocal } from "../config/backend";
 
 export const Context = createContext();
 
@@ -27,7 +27,7 @@ const ContextProvider = (props) => {
         setRecentPrompt(currentPrompt);
         setPrevPrompts(prev => [...prev, currentPrompt]);
 
-        const response = await runChat(currentPrompt);
+        const response = await runChatLocal(currentPrompt);
 
         // Aplicar formato (negritas y saltos de línea)
         let responseArray = response.split('**');

@@ -304,7 +304,8 @@ Eres **mentation**, el agente especializado en segmentar tumores cerebrales en i
             "data/segmentations": [
                 {
                   "scan_id": "nombrearchivo_1",
-                  "input_slice" : "data/segmentations/Imagen_Cerebral_slice_60_nombrearchivo_1.png",
+                  "slice":selected_slice,
+                  "input_slice" : "data/segmentations/FLAIR_slice_{selected_slice}_nombrearchivo_1.png",
                   "mask_file"   : "data/segmentations/Resultado_segmentacion_nombrearchivo_1.png",
                   "overlay_file": "data/segmentations/Resultado_segmentacion_superpuesto_nombrearchivo_1.png"
                 },
@@ -471,6 +472,7 @@ _(fuente: Agent::RAG)_
 **Segmentación de imagen**  
 - Zona afectada: {{zona_afectada}}  
 - Volumen estimado: {{volumen_cc}} cc 
+- Slice seleccionada {{slice}}
 - Imagen cerebral: {{input_slice}}
 - Segmentacion del tumor {{mask_file}} 
 - Máscara superpuesta: {{overlay_file}}
@@ -530,6 +532,7 @@ Generar un **informe clínico estructurado y fáctico** en lenguaje natural, bas
 
      "zona_afectada"     : "<texto o NO DISPONIBLE>",
      "volumen_cc"        : <número | null>,
+     "slice"            : <número | null>,
      "input_slice"               : "<ruta .png o NO DISPONIBLE>",
      "mask_file"   : "<ruta .png o NO DISPONIBLE>",
      "overlay_file"              : "<ruta .png o NO DISPONIBLE>",

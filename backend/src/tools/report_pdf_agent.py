@@ -225,6 +225,7 @@ def generate_pdf_from_report(report_json_path: str,
         seg = f"""
         Zona afectada: {data.get('zona_afectada','NO DISPONIBLE')}<br/>
         Volumen estimado: {data.get('volumen_cc','NO DISPONIBLE')} cc<br/>
+        Slice seleccionada: {data.get('slice','NO DISPONIBLE')} cc<br/>
         Imagen cerebral: {data.get('input_slice','NO DISPONIBLE')}<br/>
         Segmentacion del tumor: {data.get('mask_file','NO DISPONIBLE')}<br/>
         Máscara superpuesta: {data.get('overlay_file','NO DISPONIBLE')}

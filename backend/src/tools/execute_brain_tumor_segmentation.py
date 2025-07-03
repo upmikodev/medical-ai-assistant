@@ -120,7 +120,7 @@ def load_model(model_path: str,weights_path: str):
 
 
 
-def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
+def showPredicts(p,flair,flair_path,t1ce, start_slice=SELECTED_SLICE_IDX):
     """Muestra 6 figuras independientes (FLAIR, GT, pred y clases) para un slice."""
 
     os.makedirs(OUT_INPUT_DIR, exist_ok=True)
@@ -136,6 +136,8 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     k = start_slice + VOLUME_START_AT  
     ups = 4  # factor de escala para la vista
     flair_vis = cv2.resize(flair[:, :, k],(IMG_SIZE*ups, IMG_SIZE*ups),
+            interpolation=cv2.INTER_CUBIC)
+    t1ce_vis = cv2.resize(t1ce[:, :, k],(IMG_SIZE*ups, IMG_SIZE*ups),
             interpolation=cv2.INTER_CUBIC) 
     mask_all = cv2.resize(p[start_slice, :, :, 1:4],(IMG_SIZE*ups,IMG_SIZE*ups),
             interpolation=cv2.INTER_NEAREST) 
@@ -166,9 +168,8 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     plt.imshow(flair_vis, cmap='gray',interpolation='bilinear')
     plt.title('Original FLAIR ')
     plt.axis('off')
-    png_input = os.path.join( OUT_INPUT_DIR+f"Imagen_Cerebral_slice_{SELECTED_SLICE_IDX}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png"))
+    png_input = os.path.join( OUT_INPUT_DIR+f"FLAIR_slice_{k}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png"))
     plt.savefig(png_input, bbox_inches='tight', pad_inches=0)
-    plt.savefig(png_mask, bbox_inches='tight', pad_inches=0)  # <<--- ESTE ES NECESARIO
     plt.close() 
     
     # 2) Ground-truth
@@ -241,6 +242,15 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     plt.axis('off')
 
 
+    plt.figure(figsize=(6, 6), dpi=200)
+    plt.imshow(t1ce_vis, cmap='gray',interpolation='bilinear')
+    plt.title('Original FLAIR ')
+    plt.axis('off')
+    png_t1ce = os.path.join( OUT_INPUT_DIR+f"T1CE_slice_{k}_"+ os.path.basename(flair_path).replace("_flair.nii", ".png"))
+    plt.savefig(png_t1ce, bbox_inches='tight', pad_inches=0)
+    plt.close() 
+
+
     #plt.show()
 
 
@@ -254,7 +264,7 @@ def showPredicts(p,flair,flair_path, start_slice=SELECTED_SLICE_IDX):
     ]
 
 
-    return png_input, png_mask, png_overlay
+    return png_input, png_mask, png_overlay,k
 
 
 
@@ -339,11 +349,12 @@ def segmenter_tumor_from_image(flair_path: str, t1ce_path: str) -> str:
         p = model.predict(X/np.max(X), verbose=1)
 
 
-        png_input, png_mask,png_overlay=showPredicts(p,flair,flair_path)
+        png_input, png_mask,png_overlay,selected_slice=showPredicts(p,flair,flair_path,t1ce)
         show_predicted_segmentations(p)
 
 
         return json.dumps({
+            "slice":selected_slice,
             "input_slice": png_input,
             "mask_file"  : png_mask,
             "overlay_file": png_overlay

@@ -1,1 +1,1 @@
-{"patient_identifier": "lucia_rodriguez", "scans": [{"scan_id": "lucia_rodriguez_1", "flair_path": "data/pictures/lucia_rodriguez_1_flair.nii", "t1ce_path": "data/pictures/lucia_rodriguez_1_t1ce.nii"}]}
+{"patient_identifier":"lucia_rodriguez","scans":[{"scan_id":"lucia_rodriguez_1","flair_path":"data/pictures/lucia_rodriguez_1_flair.nii","t1ce_path":"data/pictures/lucia_rodriguez_1_t1ce.nii"}]}

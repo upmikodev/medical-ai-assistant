@@ -1,26 +1,26 @@
 {
   "paciente_id": "lucia_rodriguez",
-  "nombre": "Lucía Rodríguez",
+  "nombre": "Lucia Rodríguez",
   "edad": 45,
   "fecha": "2025-06-12",
   "motivo_consulta": "Accidente cerebrovascular isquémico",
 
   "tumor_prob": 0.977,
   "tumor_resultado": "tumor",
-  "comentarios_clasificador": "Alta probabilidad de tumor detectada en el escáner.",
+  "comentarios_clasificador": "Probabilidad alta de tumor según clasificación automática.",
 
-  "zona_afectada": "NO DISPONIBLE",
+  "zona_afectada": "Región parietal izquierda",
   "volumen_cc": null,
   "input_slice": "NO DISPONIBLE",
   "mask_file": "NO DISPONIBLE",
   "overlay_file": "NO DISPONIBLE",
 
-  "resumen_historial": "- Debilidad súbita en el hemicuerpo derecho.\n- Dificultad en el habla y comprensión disminuida.\n- Factores de riesgo: hipertensión y tabaquismo.\n- Lesión hipodensa en la región parietal izquierda.\n- Demora en perfusión de la arteria cerebral media.\n- Diagnóstico: I63.9 - Infarto cerebral no especificado.",
+  "resumen_historial": "Informe clínico: Debilidad súbita en hemicuerpo derecho, dificultad en el habla y comprensión, factores de riesgo hipertensión y tabaquismo. Diagnóstico: I63.9 Infarto cerebral no especificado.",
 
-  "riesgo": "NO DISPONIBLE",
-  "justificacion_triaje": "Información clínica insuficiente para determinar el nivel de prioridad.",
+  "riesgo": "alto",
+  "justificacion_triaje": "Paciente con diagnóstico de accidente cerebrovascular isquémico (I63.9), presentando debilidad súbita en hemicuerpo derecho y dificultad en el habla, con lesión hipodensa en región parietal izquierda, factores de riesgo significativos (hipertensión, tabaquismo). Requiere intervención urgente, incluyendo trombólisis intravenosa y control estricto de presión arterial.",
 
-  "comentario_final_sobre_el_caso": "NO DISPONIBLE",
+  "comentario_final_sobre_el_caso": "Paciente de alto riesgo con diagnóstico confirmado de ACV isquémico y signos clínicos y de imagen compatibles. No se detectó segmento tumoral confiable por error en segmentación. Se recomienda seguimiento y manejo urgente del evento cerebrovascular.",
 
   "scans": [
     {

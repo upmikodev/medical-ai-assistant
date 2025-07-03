@@ -1,1 +1,1 @@
-{"patient_identifier":"lucia_rodriguez","data/segmentations":[{"scan_id":"lucia_rodriguez_1","error":"No se pudo segmentar el par de imágenes: cannot access local variable 'png_mask' where it is not associated with a value"}]}
+{"patient_identifier":"lucia_rodriguez","data/segmentations":[{"scan_id":"lucia_rodriguez_1","error":"No se pudo segmentar el par de imágenes: local variable 'png_mask' referenced before assignment."}]}

@@ -1,0 +1,28 @@
+# ❌ Entornos virtuales
+.venv/
+
+# ❌ Caché de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ❌ Archivos ocultos o config local
+*.env
+*.log
+*.ipynb
+.DS_Store
+*.bat
+
+# ❌ Archivos o carpetas de desarrollo local
+README.md
+launch.bat
+main_local.py
+
+# ❌ Carpetas de control de versiones
+.git
+.github
+.vscode
+
+# ❌ Evita copiar .dockerignore (opcional)
+.dockerignore

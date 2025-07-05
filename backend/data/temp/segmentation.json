@@ -1,0 +1,1 @@
+{"patient_identifier":"lucia_rodriguez","data/segmentations":[{"scan_id":"lucia_rodriguez_1","slice":82,"input_slice":"data/segmentations/FLAIR_slice_82_lucia_rodriguez_1.png","mask_file":"data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png","overlay_file":"data/segmentations/Resultado_segmentacion_superpuesto_lucia_rodriguez_1.png"}]}

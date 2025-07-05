@@ -1,0 +1,17 @@
+# ❌ node_modules no se necesita en Docker (se reinstala en build)
+node_modules/
+
+# ❌ Archivos de configuración local
+.env
+*.log
+.DS_Store
+
+# ❌ Archivos de desarrollo o doc
+README.md
+*.md
+*.swp
+
+# ❌ Archivos del editor
+.vscode/
+.idea/
+.dockerignore

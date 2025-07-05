@@ -1,17 +1,28 @@
-# Ignore virtualenv
+# ❌ Entornos virtuales
 .venv/
-# Ignore pycache
+
+# ❌ Caché de Python
 __pycache__/
-# Ignore OS-specific files
-.DS_Store
-*.swo
-*.swp
-*.swn
-# Ignore IDE-specific files
-.idea/
-.vscode/
-# Ignore temporary files
-*.tmp
-*.temp
-# Ignore log files
+*.pyc
+*.pyo
+*.pyd
+
+# ❌ Archivos ocultos o config local
+*.env
 *.log
+*.ipynb
+.DS_Store
+*.bat
+
+# ❌ Archivos o carpetas de desarrollo local
+README.md
+launch.bat
+main_local.py
+
+# ❌ Carpetas de control de versiones
+.git
+.github
+.vscode
+
+# ❌ Evita copiar .dockerignore (opcional)
+.dockerignore

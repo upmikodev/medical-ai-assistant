@@ -173,7 +173,6 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-chroma_db
 # End of https://www.toptal.com/developers/gitignore/api/python
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
@@ -350,7 +349,7 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-chroma_db
+
 # End of https://www.toptal.com/developers/gitignore/api/python
 
 # Large files to ignore

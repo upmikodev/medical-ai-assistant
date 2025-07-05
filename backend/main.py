@@ -1,5 +1,3 @@
-# main.py
-
 from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,17 +5,18 @@ import os
 import shutil
 import datetime
 
-# from strands import agent_orchestrator
-# 🔁 Simulación temporal del orquestador. Sustituir por import real cuando se integre strands.
-def agent_orchestrator(query: str) -> str:
-    return f"[SIMULACIÓN] Jarvis recibió la petición: '{query}'"
+# Importar desde el path real
+from src.agents.orchestrator_agent import agent_orchestrator
 
 app = FastAPI()
 
-# Permitir conexión desde tu frontend React
+# Permitir conexión desde tu frontend React y también localhost
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Cambia si tu frontend está en otro sitio
+    allow_origins=[
+        "http://localhost:5173",
+        "https://white-moss-01e39d310.6.azurestaticapps.net"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

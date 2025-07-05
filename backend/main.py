@@ -14,7 +14,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
+        "http://localhost:3000",
         "https://white-moss-01e39d310.6.azurestaticapps.net"
     ],
     allow_credentials=True,

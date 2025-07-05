@@ -1,26 +1,27 @@
 {
   "paciente_id": "lucia_rodriguez",
-  "nombre": "Lucía Rodríguez",
+  "nombre": "Lucia Rodriguez",
   "edad": 45,
   "fecha": "2025-06-12",
-  "motivo_consulta": "Accidente cerebrovascular isquémico",
+  "motivo_consulta": "Accidente cerebrovascular isquemico",
 
   "tumor_prob": 0.977,
   "tumor_resultado": "tumor",
-  "comentarios_clasificador": "Alta probabilidad de tumor detectada en el escáner.",
+  "comentarios_clasificador": "Clasificación automática con alta probabilidad de tumor cerebral (p=0.977).",
 
-  "zona_afectada": "NO DISPONIBLE",
+  "zona_afectada": "región parietal izquierda",
   "volumen_cc": null,
-  "input_slice": "NO DISPONIBLE",
-  "mask_file": "NO DISPONIBLE",
-  "overlay_file": "NO DISPONIBLE",
+  "slice": 82,
+  "input_slice": "data/segmentations/FLAIR_slice_82_lucia_rodriguez_1.png",
+  "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
+  "overlay_file": "data/segmentations/Resultado_segmentacion_superpuesto_lucia_rodriguez_1.png",
 
-  "resumen_historial": "- Debilidad súbita en el hemicuerpo derecho.\n- Dificultad en el habla y comprensión disminuida.\n- Factores de riesgo: hipertensión y tabaquismo.\n- Lesión hipodensa en la región parietal izquierda.\n- Demora en perfusión de la arteria cerebral media.\n- Diagnóstico: I63.9 - Infarto cerebral no especificado.",
+  "resumen_historial": "Accidente cerebrovascular isquémico con debilidad súbita en hemicuerpo derecho, dificultad en el habla y comprensión disminuida. Factores de riesgo incluyen hipertensión y tabaquismo. Lesión hipodensa en la región parietal izquierda y demora en perfusión de la arteria cerebral media. Diagnóstico I63.9 - Infarto cerebral no especificado.",
 
-  "riesgo": "NO DISPONIBLE",
-  "justificacion_triaje": "Información clínica insuficiente para determinar el nivel de prioridad.",
+  "riesgo": "alto",
+  "justificacion_triaje": "Paciente con diagnóstico de infarto cerebral isquémico no especificado (I63.9), presenta debilidad súbita en hemicuerpo derecho, dificultad en el habla y comprensión, junto con factores de riesgo importantes como hipertensión y tabaquismo. La lesión hipodensa en la región parietal izquierda y la demora en la perfusión de la arteria cerebral media sugieren compromiso cerebral significativo que requiere atención médica urgente.",
 
-  "comentario_final_sobre_el_caso": "NO DISPONIBLE",
+  "comentario_final_sobre_el_caso": "Se recomienda atención médica urgente por alto riesgo y signos clínicos evidentes de compromiso neurológico. Diagnóstico preliminar indica posible tumor cerebral según clasificación automática, aunque el contexto principal refiere un infarto cerebral isquémico.",
 
   "scans": [
     {
@@ -28,7 +29,7 @@
       "flair_path": "data/pictures/lucia_rodriguez_1_flair.nii",
       "t1ce_path": "data/pictures/lucia_rodriguez_1_t1ce.nii",
       "p_tumor": 0.977,
-      "mask_file": "NO DISPONIBLE"
+      "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png"
     }
   ]
 }

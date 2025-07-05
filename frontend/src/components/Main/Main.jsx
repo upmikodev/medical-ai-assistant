@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import './Main.css';
 import { assets } from '../../assets/assets';
 import { Context } from '../../context/Context';
+import ProgresoDiagnostico from '../ProgresoDiagnostico';
 
 const Main = () => {
   const {
@@ -23,7 +24,6 @@ const Main = () => {
       </div>
 
       <div className="main-container">
-
         {chatHistory.length > 0 ? (
           <div className="result-history">
             {chatHistory.map((msg, i) => (
@@ -46,6 +46,8 @@ const Main = () => {
                 </div>
               </div>
             )}
+            {/* progreso en vivo */}
+            {showResult && <ProgresoDiagnostico />}
           </div>
         ) : (
           <>
@@ -78,9 +80,14 @@ const Main = () => {
           <div className="search-box">
             <input
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && input.trim() !== "") {
+                  onSent();
+                }
+              }}
               value={input}
               type="text"
-              placeholder='Escribe tu consulta aquí...'
+              placeholder="Escribe tu consulta aquí..."
             />
             <div>
               <img src={assets.gallery_icon} width={30} alt="" />

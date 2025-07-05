@@ -2,13 +2,18 @@ from strands import Agent
 from strands.tools import tool
 import json
 import os
+import logging
+import re
+
 from src.config.config import strands_model_mini
 from src.config.prompts import report_system_prompt
-from src.tools.file_system_tools import write_file_to_local
-from src.tools.file_system_tools import read_file_from_local
+from src.tools.file_system_tools import write_file_to_local, read_file_from_local
 from src.tools.report_pdf_agent import generate_pdf_from_report
-@tool()
 
+# logger ya configurado en main
+logger = logging.getLogger(__name__)
+
+@tool()
 def report_agent(
     patient_identifier: str,
     classification: str,
@@ -28,14 +33,11 @@ def report_agent(
         - knowledge (str): Información recuperada a través de RAG de la base de conocimiento.
         - triage (str): Resultado del triaje automático.
     
-    Tools:
-        - write_file_to_local(path: str, content: str): Guarda el reporte en un archivo local.
-    
     Returns:
-        - report_path (str): Ruta del archivo final que recibirá el usuario.
+        JSON con resumen y ruta de descarga del PDF
     """
     try:
-        report_agent = Agent(
+        agent = Agent(
             model=strands_model_mini,
             tools=[
                 read_file_from_local,
@@ -44,8 +46,21 @@ def report_agent(
             ],
             system_prompt=report_system_prompt
         )
-        return report_agent(patient_identifier)
+        result = agent(patient_identifier)
+
+        # intentar capturar el nombre real del PDF
+        match = re.search(r"([\w\-]+\.pdf)", result)
+        pdf_filename = match.group(1) if match else None
+
+        logger.info(f"✅ Informe clínico generado y validado para {patient_identifier}. "
+                    f"Disponible en el archivo: {pdf_filename}")
+
+        return json.dumps({
+            "summary": f"✅ Informe clínico generado y validado para {patient_identifier}.",
+            "pdf_path": f"/download/{pdf_filename}" if pdf_filename else None
+        })
     except Exception as e:
+        logger.error(f"❌ Error en report_agent: {e}")
         return json.dumps({
             "patient_identifier": patient_identifier,
             "classification": classification,

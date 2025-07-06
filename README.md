@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="https://i.imgur.com/tJgL4J9.png" alt="Project Logo">
+  <img src="backend/data/logos/1.png" alt="Logo" width="400"/>
+  <img src="backend/data/segmentations/Resultado_segmentacion_superpuesto_lucia_rodriguez_1.png" alt="Segmentación" width="400"/>
 </p>
 
 # Asistente Médico Virtual con IA

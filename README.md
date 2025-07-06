@@ -1,115 +1,110 @@
-# TFM
+<p align="center">
+  <img src="https://i.imgur.com/tJgL4J9.png" alt="Project Logo">
+</p>
+
+# Asistente Médico Virtual con IA
+
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
 ## Descripción
 
-Este proyecto desarrolla un asistente virtual tipo "Jarvis" para profesionales médicos. El asistente integra un chatbot y un voicebot para facilitar la interacción, y está diseñado para ayudar en tareas como:
+Este proyecto desarrolla un asistente virtual avanzado para profesionales médicos, diseñado para optimizar el flujo de trabajo clínico y apoyar en el diagnóstico y la gestión de información. La plataforma integra un chatbot y un voicebot, permitiendo una interacción fluida y natural.
 
-*   **Segmentación y clasificación de imágenes de resonancia magnética (MRI) cerebrales:** Permite analizar imágenes médicas para identificar y clasificar posibles anomalías o tumores.
-*   **Sistema RAG (Retrieval Augmented Generation):** Proporciona acceso rápido y contextualizado a información relevante a partir de una base de conocimientos médicos.
-*   **Agentes especializados:** Incluye agentes para la redacción de informes médicos y la validación de información.
+### Funcionalidades Clave
 
-El objetivo principal es ofrecer una herramienta integral que optimice el flujo de trabajo del personal médico, proporcionando soporte en el diagnóstico y la gestión de información clínica.
+- **Análisis de Imágenes Médicas:** Segmentación y clasificación de imágenes de resonancia magnética (MRI) cerebrales para la detección de tumores.
+- **Sistema RAG (Retrieval Augmented Generation):** Acceso rápido y contextualizado a una base de conocimientos médicos para resolver dudas y obtener información relevante.
+- **Agentes Especializados:**
+  - **Redactor de Informes:** Generación automática de borradores de informes médicos.
+  - **Validador de Información:** Verificación de la consistencia y fiabilidad de los datos.
 
 ## Estructura del Proyecto
 
 ```
 .
+├── backend/
+│   ├── Dockerfile
+│   ├── main.py
+│   ├── requirements.txt
+│   └── src/
+│       ├── agents/
+│       ├── config/
+│       └── tools/
+├── frontend/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── src/
+│       ├── components/
+│       ├── assets/
+│       └── context/
+├── docker-compose.yml
 ├── README.md
-├── swarm_strands.ipynb             # Jupyter notebook para experimentación/análisis (posiblemente relacionado con algoritmos de IA o procesamiento de datos)
-├── strands_tools.py                # Funciones de utilidad y clases (posiblemente para la manipulación de datos o algoritmos específicos)
-├── execute_brain_tumor_classifier.py # Script para ejecutar la clasificación de tumores cerebrales (parte del módulo de análisis de MRI)
-├── config.py                       # Archivo de configuración para el proyecto (parámetros de modelos, APIs, etc.)
-├── models/                         # Directorio para almacenar modelos entrenados (ej. segmentación, clasificación, RAG)
-├── outputs/                        # Directorio para almacenar salidas (ej. segmentaciones, clasificaciones, informes generados)
-├── pictures/                       # Directorio para imágenes (ej. ejemplos de MRI, diagramas de arquitectura)
-├── test_dir/                       # Directorio para datos o scripts de prueba
-├── temp/                           # Archivos temporales
-├── .gitignore                      # Especifica archivos no rastreados intencionalmente que Git debe ignorar
-├── __pycache__/
-├── .git/
-├── .vscode/
-└── .venv/
+└── swarm_strands.ipynb
 ```
 
-## Componentes Clave
+## Componentes Tecnológicos
 
-El sistema se compone de varios módulos interconectados:
+- **Backend:** Python, FastAPI, Langchain, ChromaDB.
+- **Frontend:** React, Vite.
+- **Contenerización:** Docker, Docker Compose.
+- **Modelos de IA:** Modelos personalizados para clasificación y segmentación de tumores, y modelos de lenguaje para el sistema RAG y los agentes.
 
-1.  **Interfaz de Usuario (Chatbot/Voicebot):**
-    *   Permite la interacción con el asistente mediante texto y voz.
-    *   *(Archivos/módulos específicos a detallar aquí, ej. `chatbot_interface.py`, `voice_recognition_service.py`)*
+## Instalación y Uso
 
-2.  **Procesamiento de Imágenes Médicas (MRI):**
-    *   `execute_brain_tumor_classifier.py`: Script principal para la clasificación de tumores.
-    *   *(Posiblemente otros scripts o módulos para segmentación, ej. `segmentation_module.py`)*
-    *   Modelos de IA almacenados en `models/`.
+### Prerrequisitos
 
-3.  **Sistema RAG (Retrieval Augmented Generation):**
-    *   Proporciona respuestas basadas en una base de conocimiento específica.
-    *   *(Archivos/módulos específicos a detallar aquí, ej. `rag_system.py`, `knowledge_base/`)*
+- Docker y Docker Compose instalados.
+- Git para clonar el repositorio.
 
-4.  **Agentes Especializados:**
-    *   **Redactor de Información:** Genera texto coherente y relevante (ej. borradores de informes).
-        *   *(Archivos/módulos específicos a detallar aquí, ej. `report_generator_agent.py`)*
-    *   **Validador de Información:** Verifica la consistencia o fiabilidad de los datos.
-        *   *(Archivos/módulos específicos a detallar aquí, ej. `validation_agent.py`)*
+### Pasos
 
-5.  **Orquestación y Lógica Principal ("Jarvis Core")**
-    *   Coordina los diferentes módulos y agentes.
-    *   `swarm_strands.ipynb` y `strands_tools.py` podrían estar relacionados con la lógica central, algoritmos de decisión o el procesamiento de flujos de trabajo complejos del asistente.
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone https://github.com/tu_usuario/tu_repositorio.git
+    cd tu_repositorio
+    ```
 
-6.  **Configuración y Utilidades:**
-    *   `config.py`: Gestiona configuraciones globales y específicas de los módulos.
-    *   `strands_tools.py`: Podría contener utilidades generales usadas por varios componentes.
+2.  **Configurar variables de entorno:**
+    - Crear un archivo `.env` en la raíz del proyecto y añadir las claves de API necesarias (ej. `OPENAI_API_KEY`).
 
-## Configuración
+3.  **Levantar los servicios con Docker Compose:**
+    ```bash
+    docker-compose up -d --build
+    ```
 
-*(Por favor, añada instrucciones sobre cómo configurar el entorno del proyecto, instalar dependencias, etc.)*
-Ejemplo:
-```bash
-python -m venv .venv
-source .venv/bin/activate  # En Windows usar `.venv\Scripts\activate`
-pip install -r requirements.txt # Si tienes un archivo requirements.txt
-```
+4.  **Acceder a la aplicación:**
+    - **Frontend:** `http://localhost:5173`
+    - **Backend (API Docs):** `http://localhost:8000/docs`
 
-## Uso
+## Estado del Proyecto
 
-*(Por favor, añada instrucciones sobre cómo ejecutar el proyecto y cada uno de sus componentes.)*
+### Implementado
 
-**Ejemplo para el Clasificador de Tumores Cerebrales:**
-```bash
-python execute_brain_tumor_classifier.py --input <ruta_a_imagen_mri> --model <nombre_del_modelo_clasificacion>
-```
+- **Backend:**
+  - API con FastAPI.
+  - Módulo de clasificación de tumores cerebrales.
+  - Sistema RAG con ChromaDB.
+  - Agente orquestador y agentes especializados (en desarrollo).
+- **Frontend:**
+  - Interfaz de chatbot con React.
+  - Visualización de resultados de análisis.
+- **Infraestructura:**
+  - Dockerización de frontend y backend.
+  - Orquestación con Docker Compose.
 
-**Ejemplo para iniciar el asistente (conceptual):**
-```bash
-python main_assistant.py --enable-voice
-```
+### Tareas Pendientes
 
-## Estado Actual y Tareas Pendientes / Por Hacer
-
-*(Aquí es donde puede detallar el progreso actual y describir lo que se necesita hacer.)*
-
-**Actualmente Implementado:**
-*   *(Por favor, detalla qué componentes o funcionalidades ya están desarrollados, ej: "Módulo básico de clasificación de tumores implementado", "Interfaz de chatbot inicial".)*
-*   ...
-
-**Tareas Pendientes / Trabajo Futuro:**
-*   Desarrollo/Integración del voicebot.
-*   Implementación completa del sistema RAG.
-*   Desarrollo de los agentes de redacción y validación.
-*   Creación de una interfaz de usuario más robusta.
-*   Entrenamiento y ajuste fino de los modelos de IA (segmentación, clasificación, RAG).
-*   Definición detallada de la base de conocimientos para RAG.
-*   Pruebas exhaustivas y validación clínica (si aplica).
-*   Documentación detallada de la API y módulos.
-*   Instrucciones de despliegue.
-*   ... (Por favor, añada más elementos o ajuste los existentes según el estado real)
-
-## Contribuciones
-
-*(Opcional: Añada directrices para contribuir al proyecto si es colaborativo.)*
-
-## Licencia
-
-*(Opcional: Especifique la licencia para su proyecto.)*
+- **Backend:**
+  - Integración completa del voicebot.
+  - Refinamiento de los agentes de redacción y validación.
+  - Optimización de los modelos de IA.
+- **Frontend:**
+  - Mejoras en la interfaz de usuario y experiencia de usuario (UI/UX).
+  - Implementación de notificaciones en tiempo real.
+- **General:**
+  - Pruebas exhaustivas y validación clínica.
+  - Documentación detallada de la API y los módulos.
+  - Despliegue en un entorno de producción.

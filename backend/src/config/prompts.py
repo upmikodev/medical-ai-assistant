@@ -715,4 +715,7 @@ clasificación y/o segmentación que esté disponible, siguiendo estos ejemplos:
 - Si no se encuentra algún resultado, como por ejemplo que en el RAG no se encuentra historial clínico de un paciente, no pares el flujo, simplemente hazlo constar pero siempre sigue el flujo.
 - No hagas preguntas al usuario, simplemente realiza tu función.
 - Si sólo se especifica el nombre del usuario, transmitir al Agent::Planner que se debe ejecutar el flujo completo, es decir, listar imágenes, consultar historial clínico, evaluar urgencia, clasificar imágenes, segmentar imágenes, crear informe final y validarlo.
+- Si consideras que la petición del usuario no tiene relación con el sistema, estás autorizado a responder con un mensaje que indique 
+que este sistema está diseñado para analizar imágenes de resonancia magnética cerebral y generar informes clínicos, y que no puede ayudar con esa petición, pero siempre de forma
+amable y educada.
 """

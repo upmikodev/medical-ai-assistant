@@ -1,6 +1,7 @@
 
 
 from langchain_chroma import Chroma 
+
 from langchain_openai import OpenAIEmbeddings
 import unicodedata
 import json

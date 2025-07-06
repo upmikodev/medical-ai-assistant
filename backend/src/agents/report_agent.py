@@ -39,7 +39,7 @@ def report_agent(
         - report_path (str): Ruta del archivo final que recibirá el usuario.
     """
     try:
-        report_agent = Agent(
+        reporting_agent = Agent(
             model=strands_model_4_1,
             tools=[
                 read_file_from_local,
@@ -48,10 +48,11 @@ def report_agent(
             ],
             system_prompt=report_system_prompt
         )
-        result = report_agent(patient_identifier)
+        result = reporting_agent(patient_identifier)
 
-        # intentar capturar el nombre real del PDF
-        match = re.search(r"([\w\-]+\.pdf)", result)
+        output_text = result.output if hasattr(result, "output") else str(result)
+
+        match = re.search(r"([\w\-]+\.pdf)", output_text)
         pdf_filename = match.group(1) if match else None
 
         logger.info(f"✅ Informe clínico generado y validado para {patient_identifier}. "

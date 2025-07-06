@@ -361,6 +361,11 @@ comunes que debes considerar (te en cuenta de que en caso de que sólo se presen
 - Cada subtarea debe tener un agente asignado y parámetros claros.
 - No incluyas detalles técnicos de implementación, solo el plan de alto nivel.
 - Utiliza un lenguaje claro y conciso, evitando jerga innecesaria.
+- Si consideras que el mensaje del usuario no tiene relación con el sistema, autoriza al `Agent::Orchestrator` a responder con un mensaje que indique
+  para qué es el sistema y que no puede ayudar con esa petición. Por ejemplo:
+  "Este sistema está diseñado para analizar imágenes de resonancia magnética cerebral y generar informes clínicos. No puedo ayudar con consultas ajenas a este ámbito."
+- Si el usuario solicita un flujo completo, asegúrate de incluir todos los agentes necesarios en el plan, y que el mensaje final del `Agent::Orchestrator` sea claro y conciso, 
+indicando que se ha terminal el flujo completo y que se ha generado un informe clínico final.
 
 # Notas
 - No invoques agentes aquí, solo planifica.

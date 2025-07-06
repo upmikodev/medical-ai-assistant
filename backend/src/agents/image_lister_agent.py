@@ -2,7 +2,7 @@ from strands import Agent
 from strands.tools import tool
 import json
 import logging
-from src.config.config import strands_model_mini
+from src.config.config import strands_model_4_1
 from src.config.prompts import image_lister_system_prompt
 from src.tools.file_system_tools import list_files_in_dir, write_file_to_local
 
@@ -27,7 +27,7 @@ def image_lister_agent(patient_identifier: str) -> str:
     """
     try:
         lister_agent = Agent(
-            model=strands_model_mini,
+            model=strands_model_4_1,
             tools=[
                 list_files_in_dir,
                 write_file_to_local,

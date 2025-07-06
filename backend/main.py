@@ -1,9 +1,10 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse, FileResponse
 from pydantic import BaseModel
-from fastapi.middleware.cors import CORSMiddleware
-import os
+from src.agents.orchestrator_agent import agent_orchestrator
 import logging
+import os
 import sys
 
 # cargar variables de entorno
@@ -44,8 +45,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-from src.agents.orchestrator_agent import agent_orchestrator
 
 # ================
 # ENDPOINTS

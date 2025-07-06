@@ -3,7 +3,7 @@ from strands.tools import tool
 import json
 import logging
 
-from src.config.config import strands_model_mini
+from src.config.config import strands_model_4_1
 from src.config.prompts import rag_system_prompt
 from src.tools.rag_tool import rag_tool
 from src.tools.file_system_tools import write_file_to_local
@@ -26,7 +26,7 @@ def rag_agent(query: str) -> str:
     """
     try:
         rag_agent = Agent(
-            model=strands_model_mini,
+            model=strands_model_4_1,
             tools=[
                 rag_tool,
                 write_file_to_local

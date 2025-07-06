@@ -3,7 +3,7 @@ import json
 import logging
 from strands import Agent
 from strands.tools import tool
-from src.config.config import strands_model_mini
+from src.config.config import strands_model_4_1
 from src.config.prompts import triage_assistant_system_prompt
 from src.tools.file_system_tools import write_file_to_local
 
@@ -26,7 +26,7 @@ def triage_agent(query: str) -> str:
     """
     try:
         triage = Agent(
-            model=strands_model_mini,
+            model=strands_model_4_1,
             tools=[
                 write_file_to_local,
             ],

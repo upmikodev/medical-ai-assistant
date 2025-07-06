@@ -3,7 +3,7 @@ from strands.tools import tool
 import json
 import logging
 
-from src.config.config import strands_model_mini
+from src.config.config import strands_model_4_1
 from src.config.prompts import segmentator_system_prompt
 from src.tools.execute_brain_tumor_segmentation import segmenter_tumor_from_image
 from src.tools.file_system_tools import read_file_from_local, write_file_to_local
@@ -20,7 +20,7 @@ def segmentator_agent(input_file: str = "data/temp/lister.json") -> str:
     """
     try:
         seg_agent = Agent(
-            model=strands_model_mini,
+            model=strands_model_4_1,
             tools=[
                 segmenter_tumor_from_image,
                 read_file_from_local,

@@ -4,7 +4,7 @@ from strands.tools import tool
 import uuid
 import json
 import re
-from src.config.config import strands_model_mini
+from src.config.config import strands_model_4_1
 from src.config.prompts import orchestrator_system_prompt
 from src.agents.planner_agent import planner_agent
 from src.agents.image_lister_agent import image_lister_agent
@@ -19,7 +19,7 @@ import uuid
 
 try:
     agent_orchestrator= Agent(
-        model=strands_model_mini, 
+        model=strands_model_4_1, 
         tools=[
             planner_agent,
             image_lister_agent,

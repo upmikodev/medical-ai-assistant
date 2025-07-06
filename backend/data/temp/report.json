@@ -1,5 +1,5 @@
 {
-  "paciente_id": "carlos_jimenez",
+  "paciente_id": "carlos_perez_pazo",
   "nombre": "NO DISPONIBLE",
   "edad": "NO DISPONIBLE",
   "fecha": "NO DISPONIBLE",
@@ -19,7 +19,7 @@
   "resumen_historial": "NO DISPONIBLE",
 
   "riesgo": "bajo",
-  "justificacion_triaje": "No hay información clínica o hallazgos de imagen que indiquen presencia de lesión tumoral o factores de riesgo relevantes. Caso sin indicios de urgencia.",
+  "justificacion_triaje": "No hay información clínica ni diagnóstico de tumor ni lesión, ni antecedentes o factores de riesgo señalados que indiquen necesidad de evaluación urgente.",
 
   "comentario_final_sobre_el_caso": "NO DISPONIBLE",
 

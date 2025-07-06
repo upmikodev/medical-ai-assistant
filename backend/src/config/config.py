@@ -35,9 +35,15 @@ try:
         client_args={"api_key": os.getenv("OPENAI_API_KEY")},
         model_id="gpt-4.1-nano"
     )
+
     strands_model_mini = OpenAIModel(
         client_args={"api_key": os.getenv("OPENAI_API_KEY")},
         model_id="gpt-4.1-mini"
+    )
+
+    strands_model_4_1 = OpenAIModel(
+        client_args={"api_key": os.getenv("OPENAI_API_KEY")},
+        model_id="gpt-4.1"
     )
     print("Strands OpenAIModels initialized successfully.")
 
@@ -71,3 +77,6 @@ if __name__ == "__main__":
         print(f"Mini OpenAIModel model_id: {strands_model_mini.config['model_id']}")
     else:
         print("Mini OpenAIModel (strands_model_mini) is None.")
+    
+    if strands_model_4_1:
+        print(f"GPT-4.1 OpenAIModel model_id: {strands_model_4_1.config['model_id']}")

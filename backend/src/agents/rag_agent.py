@@ -1,10 +1,15 @@
 from strands import Agent
 from strands.tools import tool
 import json
-from src.config.config import strands_model_mini
+import logging
+
+from src.config.config import strands_model_4_1
 from src.config.prompts import rag_system_prompt
 from src.tools.rag_tool import rag_tool
 from src.tools.file_system_tools import write_file_to_local
+
+# logger ya configurado en main
+logger = logging.getLogger(__name__)
 
 @tool()
 def rag_agent(query: str) -> str:
@@ -16,23 +21,26 @@ def rag_agent(query: str) -> str:
     Args:
         query (str): Consulta en lenguaje natural sobre el caso clínico del paciente.
 
-    Tools:
-        rag_tool (str): Herramienta para realizar la búsqueda semántica en la base de datos vectorial.
-
     Returns:
         str: Texto recuperado con información relevante del paciente o mensaje de error si ocurre algún problema.
     """
     try:
         rag_agent = Agent(
-            model=strands_model_mini,
+            model=strands_model_4_1,
             tools=[
                 rag_tool,
                 write_file_to_local
             ],
             system_prompt=rag_system_prompt
         )
-        return rag_agent(query)
+
+        result = rag_agent(query)
+
+        # registrar resumen humano-legible
+        logger.info(f"🔎 RAG respuesta: {result}")
+
+        return result
+
     except Exception as e:
-        return json.dumps({
-            "error": str(e)
-        })
+        logger.error(f"❌ Error en rag_agent: {e}")
+        return json.dumps({"error": str(e)})

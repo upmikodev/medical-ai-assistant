@@ -27,9 +27,25 @@ const ContextProvider = (props) => {
         setRecentPrompt(currentPrompt);
         setPrevPrompts(prev => [...prev, currentPrompt]);
 
-        const response = await runChatLocal(currentPrompt);
+        const responseRaw = await runChatLocal(currentPrompt);
 
-        // Aplicar formato (negritas y saltos de línea)
+        let response = responseRaw;
+        let pdfLink = "";
+
+        // intentar parsear JSON si lo devuelve
+        try {
+            const parsed = JSON.parse(responseRaw);
+            if (parsed.summary) {
+                response = parsed.summary;
+            }
+            if (parsed.pdf_path) {
+                pdfLink = `<br/><a href="http://localhost:8000${parsed.pdf_path}" target="_blank">📄 Descargar informe PDF</a>`;
+            }
+        } catch {
+            // no es JSON, asumimos texto plano
+        }
+
+        // aplicar formato básico (negritas)
         let responseArray = response.split('**');
         let formatted = "";
         for (let i = 0; i < responseArray.length; i++) {
@@ -39,16 +55,16 @@ const ContextProvider = (props) => {
                 formatted += "<b>" + responseArray[i] + "</b>";
             }
         }
-        const finalResponse = formatted.split('*').join("</br>");
+        let finalResponse = formatted.split('*').join("</br>") + pdfLink;
 
-        // Añadir a historial
+        // añadir a historial
         setChatHistory(prev => [
             ...prev,
             { role: "user", content: currentPrompt },
             { role: "bot", content: finalResponse }
         ]);
 
-        // Para render animado actual (opcional)
+        // para render animado actual
         const animatedArray = finalResponse.split(" ");
         for (let i = 0; i < animatedArray.length; i++) {
             const nextWord = animatedArray[i];
@@ -57,14 +73,14 @@ const ContextProvider = (props) => {
 
         setLoading(false);
         setInput("");
-    }
+    };
 
     const newChat = () => {
         setLoading(false);
         setShowResult(false);
-        setChatHistory([]); // Limpiar historial si empiezas una conversación nueva
+        setChatHistory([]);
         setResultData("");
-    }
+    };
 
     const contextValue = {
         prevPrompts,
@@ -80,13 +96,13 @@ const ContextProvider = (props) => {
         newChat,
         chatHistory,
         setChatHistory
-    }
+    };
 
     return (
         <Context.Provider value={contextValue}>
             {props.children}
         </Context.Provider>
     );
-}
+};
 
 export default ContextProvider;

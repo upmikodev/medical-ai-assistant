@@ -1,27 +1,29 @@
 {
-  "paciente_id": "carlos_jimenez",
-  "nombre": "NO DISPONIBLE",
-  "edad": "NO DISPONIBLE",
-  "fecha": "NO DISPONIBLE",
-  "motivo_consulta": "NO DISPONIBLE",
-
-  "tumor_prob": null,
-  "tumor_resultado": "NO DISPONIBLE",
-  "comentarios_clasificador": "NO DISPONIBLE",
-
-  "zona_afectada": "NO DISPONIBLE",
+  "paciente_id": "lucia_rodriguez",
+  "nombre": "Lucia Rodriguez",
+  "edad": 45,
+  "fecha": "2025-06-12",
+  "motivo_consulta": "Accidente cerebrovascular isquemico",
+  "tumor_prob": 0.9769968390464783,
+  "tumor_resultado": "tumor",
+  "comentarios_clasificador": "Probabilidad estimada de presencia de tumor (clasificador IA): 0.9769. Clasificación realizada automáticamente.",
+  "zona_afectada": "region parietal izquierda",
   "volumen_cc": null,
-  "slice": null,
-  "input_slice": "NO DISPONIBLE",
-  "mask_file": "NO DISPONIBLE",
-  "overlay_file": "NO DISPONIBLE",
-
-  "resumen_historial": "NO DISPONIBLE",
-
-  "riesgo": "bajo",
-  "justificacion_triaje": "No hay información clínica o hallazgos de imagen que indiquen presencia de lesión tumoral o factores de riesgo relevantes. Caso sin indicios de urgencia.",
-
-  "comentario_final_sobre_el_caso": "NO DISPONIBLE",
-
-  "scans": []
+  "slice": 82,
+  "input_slice": "data/segmentations/FLAIR_slice_82_lucia_rodriguez_1.png",
+  "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png",
+  "overlay_file": "data/segmentations/Resultado_segmentacion_superpuesto_lucia_rodriguez_1.png",
+  "resumen_historial": "- Debilidad subita en el hemicuerpo derecho.\n- Dificultad en el habla y comprension disminuida.\n- Factores de riesgo: hipertension y tabaquismo.\n- Lesion hipodensa en la region parietal izquierda.\n- Demora en perfusion de la arteria cerebral media.\nDiagnostico: I63.9 - Infarto cerebral no especificado.\nRecomendaciones: Iniciar trombolisis intravenosa. Control estricto de la presion arterial. Rehabilitacion neurologica temprana.",
+  "riesgo": "alto",
+  "justificacion_triaje": "Paciente de 45 a\u00f1os con diagn\u00f3stico de infarto cerebral isqu\u00e9mico (I63.9), debut agudo con d\u00e9ficit neurol\u00f3gico focal (debilidad en hemicuerpo derecho, afasia) y factores de riesgo significativos (hipertensi\u00f3n, tabaquismo). La situaci\u00f3n requiere evaluaci\u00f3n y manejo m\u00e9dico urgente para evitar secuelas.",
+  "comentario_final_sobre_el_caso": "El caso requiere atencion neurologica urgente debido al diagnostico de infarto cerebral isquemico, presencia de lesion parietal izquierda y a los altos factores de riesgo identificados. Manejo medico inmediato y rehabilitacion precoz son prioritarios.",
+  "scans": [
+    {
+      "scan_id": "lucia_rodriguez_1",
+      "flair_path": "data/pictures/lucia_rodriguez_1_flair.nii",
+      "t1ce_path": "data/pictures/lucia_rodriguez_1_t1ce.nii",
+      "p_tumor": 0.9769968390464783,
+      "mask_file": "data/segmentations/Resultado_segmentacion_lucia_rodriguez_1.png"
+    }
+  ]
 }

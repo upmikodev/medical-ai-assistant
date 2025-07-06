@@ -1,6 +1,7 @@
 
 
 from langchain_chroma import Chroma 
+
 from langchain_openai import OpenAIEmbeddings
 import unicodedata
 import json
@@ -25,7 +26,7 @@ def rag_tool(paciente: str, query: str) -> str:
         print(f"Ejecutando RAG Tool para el paciente: {paciente} con query: {query}")
 
         collection_name = "patients"
-        PERSIST_DIRECTORY = "./chroma_db"
+        PERSIST_DIRECTORY = "./data/chroma_db"
 
         # Crear vector store apuntando a la colección del paciente
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small")

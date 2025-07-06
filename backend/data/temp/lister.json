@@ -1,1 +1,1 @@
-{"patient_identifier":"carlos_jimenez","scans":[],"error":"No se encontraron pares de imágenes (flair/t1ce) completos."}
+{"patient_identifier": "lucia_rodriguez", "scans": [{"scan_id": "lucia_rodriguez_1", "flair_path": "data/pictures/lucia_rodriguez_1_flair.nii", "t1ce_path": "data/pictures/lucia_rodriguez_1_t1ce.nii"}]}

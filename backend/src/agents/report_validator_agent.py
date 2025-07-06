@@ -1,20 +1,23 @@
 from strands import Agent
 from strands.tools import tool
 import json
-from src.config.config import strands_model_mini
+import logging
+
+from src.config.config import strands_model_4_1
 from src.config.prompts import report_validator_system_prompt
-from src.tools.file_system_tools import write_file_to_local
-from src.tools.file_system_tools import read_file_from_local
+from src.tools.file_system_tools import write_file_to_local, read_file_from_local
 from src.tools.report_pdf_agent import generate_pdf_from_report
 from src.tools.extract_text_from_pdf import extract_text_from_pdf
+
+# logger ya configurado en main
+logger = logging.getLogger(__name__)
 
 @tool()
 def report_validator_agent(paths_json: str) -> str:
     """
-    
     Valida data/temp/report.json frente a los JSON fuente.
     Si hace falta, genera data/temp/report_validated.json + PDF corregido.
-    
+
     paths_json debe ser exactamente el diccionario que devuelve
     ReportWriter, por ejemplo:
     {
@@ -28,8 +31,8 @@ def report_validator_agent(paths_json: str) -> str:
             - "VALIDACIÓN RECHAZADA: Se han detectado inconsistencias. Se ha generado una nueva versión corregida. Ruta del nuevo archivo: <ruta>"
     """
     try:
-        report_validator_agent = Agent(
-            model=strands_model_mini,
+        validator_agent = Agent(
+            model=strands_model_4_1,
             tools=[
                 read_file_from_local,
                 write_file_to_local,
@@ -38,8 +41,14 @@ def report_validator_agent(paths_json: str) -> str:
             ],
             system_prompt=report_validator_system_prompt
         )
-        return report_validator_agent(paths_json)
+        result = validator_agent(paths_json)
+
+        # resumen human-readable para progreso
+        logger.info(f"🔎 Validación del informe completada: {result}")
+
+        return result
     except Exception as e:
+        logger.error(f"❌ Error en report_validator_agent: {e}")
         return json.dumps({
             "report_path": paths_json,
             "error": str(e)

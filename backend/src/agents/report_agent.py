@@ -1,8 +1,10 @@
+import re
+from venv import logger
 from strands import Agent
 from strands.tools import tool
 import json
 import os
-from src.config.config import strands_model_mini
+from src.config.config import strands_model_4_1
 from src.config.prompts import report_system_prompt
 from src.tools.file_system_tools import write_file_to_local
 from src.tools.file_system_tools import read_file_from_local
@@ -29,14 +31,16 @@ def report_agent(
         - triage (str): Resultado del triaje automático.
     
     Tools:
-        - write_file_to_local(path: str, content: str): Guarda el reporte en un archivo local.
+        - read_file_from_local(path: str): Lee el archivo local.
+        - write_file_to_local(path: str, content: str): Escribe el archivo local.
+        - generate_pdf_from_report(report_path: str): Genera el PDF del reporte.
     
     Returns:
         - report_path (str): Ruta del archivo final que recibirá el usuario.
     """
     try:
-        report_agent = Agent(
-            model=strands_model_mini,
+        reporting_agent = Agent(
+            model=strands_model_4_1,
             tools=[
                 read_file_from_local,
                 write_file_to_local,
@@ -44,7 +48,20 @@ def report_agent(
             ],
             system_prompt=report_system_prompt
         )
-        return report_agent(patient_identifier)
+        result = reporting_agent(patient_identifier)
+
+        output_text = result.output if hasattr(result, "output") else str(result)
+
+        match = re.search(r"([\w\-]+\.pdf)", output_text)
+        pdf_filename = match.group(1) if match else None
+
+        logger.info(f"✅ Informe clínico generado y validado para {patient_identifier}. "
+                    f"Disponible en el archivo: {pdf_filename}")
+
+        return json.dumps({
+            "summary": f"✅ Informe clínico generado y validado para {patient_identifier}.",
+            "pdf_path": f"/download/{pdf_filename}" if pdf_filename else None
+        })
     except Exception as e:
         return json.dumps({
             "patient_identifier": patient_identifier,

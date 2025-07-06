@@ -1,60 +1,86 @@
-from fastapi import FastAPI, UploadFile, File
-from pydantic import BaseModel
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import os
-import shutil
-import datetime
-
-# Importar desde el path real
+from fastapi.responses import PlainTextResponse, FileResponse
+from pydantic import BaseModel
 from src.agents.orchestrator_agent import agent_orchestrator
+import logging
+import os
+import sys
 
+# cargar variables de entorno
+from dotenv import load_dotenv
+dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
+load_dotenv(dotenv_path=dotenv_path)
+
+# ================
+# LOGGER
+# ================
+os.makedirs("backend/data/logs", exist_ok=True)
+log_file_path = "backend/data/logs/progreso.txt"
+
+# limpia el log al arrancar
+open(log_file_path, "w", encoding="utf-8").close()
+
+# logger tradicional
+file_handler = logging.FileHandler(log_file_path, encoding="utf-8")
+file_handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+logger = logging.getLogger()
+logger.addHandler(file_handler)
+logger.setLevel(logging.INFO)
+
+# redirigir también stdout a progreso.txt
+sys.stdout = open(log_file_path, "a", encoding="utf-8")
+
+# ================
+# FASTAPI
+# ================
 app = FastAPI()
 
-# Permitir conexión desde tu frontend React y también localhost
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://white-moss-01e39d310.6.azurestaticapps.net"
-    ],
+    allow_origins=["*"],  # recuerda limitar en producción
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# MODELO PARA MENSAJES DE TEXTO
-class ChatInput(BaseModel):
-    message: str
+# ================
+# ENDPOINTS
+# ================
 
-# ENDPOINT DE INTERACCIÓN DE TEXTO
-@app.post("/interact")
-async def interact(input: ChatInput):
+class QueryInput(BaseModel):
+    query: str
+
+@app.post("/query")
+def process_query(input: QueryInput):
     try:
-        response = str(agent_orchestrator(input.message))
-        return {"response": response}
+        response = agent_orchestrator(input.query)
+        return {"response": str(response)}
     except Exception as e:
-        return {"error": f"Fallo al invocar el orquestador: {str(e)}"}
+        logger.error(f"Fallo orquestador: {e}")
+        return {"error": str(e)}
 
-# ENDPOINT PARA SUBIR IMÁGENES Y LANZAR CLASIFICACIÓN
-@app.post("/upload-image")
-async def upload_image(file: UploadFile = File(...)):
+@app.get("/progress", response_class=PlainTextResponse)
+async def get_progress():
     try:
-        os.makedirs("data/pictures", exist_ok=True)
-
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        base_name = file.filename.split('.')[0].lower()
-        ext = file.filename.split('.')[-1]
-        filename = f"{base_name}_{timestamp}.{ext}"
-        filepath = os.path.join("data/pictures", filename)
-
-        with open(filepath, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-
-        patient_identifier = base_name.replace("_", " ").title()
-        prompt = f"Clasifica las imágenes de {patient_identifier}"
-
-        response = str(agent_orchestrator(prompt))
-        return {"response": response}
-
+        with open(log_file_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        return content
+    except FileNotFoundError:
+        return "Sin progreso todavía."
     except Exception as e:
-        return {"error": f"Error al procesar imagen: {str(e)}"}
+        logger.error(f"Error leyendo progreso: {e}")
+        return f"Error leyendo progreso: {str(e)}"
+
+@app.get("/download/{filename}")
+async def download_report(filename: str):
+    file_path = os.path.join("backend", "data", "reportes", filename)
+    if not os.path.exists(file_path):
+        return {"error": "Archivo no encontrado"}
+    return FileResponse(
+        path=file_path,
+        media_type="application/pdf",
+        filename=filename
+    )

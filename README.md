@@ -48,7 +48,7 @@ Este proyecto desarrolla un asistente virtual avanzado para profesionales médic
 
 ## Componentes Tecnológicos
 
-- **Backend:** Python, FastAPI, Langchain, ChromaDB.
+- **Backend:** Python, FastAPI, Strands Agents, ChromaDB.
 - **Frontend:** React, Vite.
 - **Contenerización:** Docker, Docker Compose.
 - **Modelos de IA:** Modelos personalizados para clasificación y segmentación de tumores, y modelos de lenguaje para el sistema RAG y los agentes.
@@ -69,7 +69,7 @@ Este proyecto desarrolla un asistente virtual avanzado para profesionales médic
     ```
 
 2.  **Configurar variables de entorno:**
-    - Crear un archivo `.env` en la raíz del proyecto y añadir las claves de API necesarias (ej. `OPENAI_API_KEY`).
+    - Crear un archivo `.env` backend/ y añadir las claves de API necesarias (ej. `OPENAI_API_KEY`).
 
 3.  **Levantar los servicios con Docker Compose:**
     ```bash
@@ -77,35 +77,5 @@ Este proyecto desarrolla un asistente virtual avanzado para profesionales médic
     ```
 
 4.  **Acceder a la aplicación:**
-    - **Frontend:** `http://localhost:5173`
-    - **Backend (API Docs):** `http://localhost:8000/docs`
-
-## Estado del Proyecto
-
-### Implementado
-
-- **Backend:**
-  - API con FastAPI.
-  - Módulo de clasificación de tumores cerebrales.
-  - Sistema RAG con ChromaDB.
-  - Agente orquestador y agentes especializados (en desarrollo).
-- **Frontend:**
-  - Interfaz de chatbot con React.
-  - Visualización de resultados de análisis.
-- **Infraestructura:**
-  - Dockerización de frontend y backend.
-  - Orquestación con Docker Compose.
-
-### Tareas Pendientes
-
-- **Backend:**
-  - Integración completa del voicebot.
-  - Refinamiento de los agentes de redacción y validación.
-  - Optimización de los modelos de IA.
-- **Frontend:**
-  - Mejoras en la interfaz de usuario y experiencia de usuario (UI/UX).
-  - Implementación de notificaciones en tiempo real.
-- **General:**
-  - Pruebas exhaustivas y validación clínica.
-  - Documentación detallada de la API y los módulos.
-  - Despliegue en un entorno de producción.
+    - **Frontend:** `http://localhost:3000`
+    - **Backend (API Docs):** `http://localhost:8000`

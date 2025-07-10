@@ -15,7 +15,7 @@
 Este proyecto desarrolla un asistente virtual avanzado para profesionales médicos, diseñado para optimizar el flujo de trabajo clínico y apoyar en el diagnóstico y la gestión de información. La plataforma integra un chatbot, permitiendo una interacción fluida y natural.
 
 ## DEMO
-<video src="backend/data/logos/demo.mp4" width="320" height="240" controls></video>
+<video src="backend/data/logos/demo.gif" width="320" height="240" controls></video>
 
 
 ### Funcionalidades Clave

@@ -1,10 +1,9 @@
 <p align="center">
   <img src="backend/data/logos/chatbot.png" alt="chatbot" width="400"/>
-  <img src="backend/data/logos/swarm.png" alt="swarm" width="400"/>
   <img src="backend/data/logos/1.png" alt="Logo" width="400"/>
 </p>
 
-# Asistente Médico Virtual con IA
+# SWARM de Agentes para Asistencia Médica con Inteligencia Artificial
 
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
@@ -13,15 +12,18 @@
 
 ## Descripción
 
-Este proyecto desarrolla un asistente virtual avanzado para profesionales médicos, diseñado para optimizar el flujo de trabajo clínico y apoyar en el diagnóstico y la gestión de información. La plataforma integra un chatbot y un voicebot, permitiendo una interacción fluida y natural.
+Este proyecto desarrolla un asistente virtual avanzado para profesionales médicos, diseñado para optimizar el flujo de trabajo clínico y apoyar en el diagnóstico y la gestión de información. La plataforma integra un chatbot, permitiendo una interacción fluida y natural.
 
 ### Funcionalidades Clave
 
-- **Análisis de Imágenes Médicas:** Segmentación y clasificación de imágenes de resonancia magnética (MRI) cerebrales para la detección de tumores.
-- **Sistema RAG (Retrieval Augmented Generation):** Acceso rápido y contextualizado a una base de conocimientos médicos para resolver dudas y obtener información relevante.
-- **Agentes Especializados:**
-  - **Redactor de Informes:** Generación automática de borradores de informes médicos.
-  - **Validador de Información:** Verificación de la consistencia y fiabilidad de los datos.
+- **Agente Clasificador:** Red neuronal encargada de estimar la probabilidad de tumor para un MRI.
+- **Agente Segmentador:** Red neuronal encargada de realizar la segmentación del tumor detectado en la imagen.
+- **Agente RAG (Retrieval Augmented Generation):** Acceso rápido y contextualizado a una base de datos de pacientes para obtener información especializada sobre su caso.
+- **Agente Triaje:** Evaluación y triaje para establecer urgencia del caso clínico en virtud de la información recuperada y el análisis de las imágenes MRI.
+- **Agente Orquestador:** Coordinación de todo el proceso en base a los requerimientos del médico.
+- **Agente Planificador:** Planificación de todo el flujo de trabajo y organización de agentes en base a las órdenes del orquestador.
+- **Agente Reportador:** Generación de documentación de todo el proceso y un informe final en formato PDF.
+- **Agente Validador:** Comprobación y verificación del reporte generado.
 
 ## Estructura del Proyecto
 
@@ -52,13 +54,13 @@ Este proyecto desarrolla un asistente virtual avanzado para profesionales médic
 - **Backend:** Python, FastAPI, Strands Agents, ChromaDB.
 - **Frontend:** React, Vite.
 - **Contenerización:** Docker, Docker Compose.
-- **Modelos de IA:** Modelos personalizados para clasificación y segmentación de tumores, y modelos de lenguaje para el sistema RAG y los agentes.
+- **Modelos de IA:** OpenAI y finetuning sobre DenseNet-121 y U-Net.
 
 ## Instalación y Uso
 
 ### Prerrequisitos
 
-- Docker y Docker Compose instalados.
+- Docker instalado.
 - Git para clonar el repositorio.
 
 ### Pasos

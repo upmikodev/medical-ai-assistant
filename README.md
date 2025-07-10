@@ -1,7 +1,7 @@
 <p align="center">
   <img src="backend/data/logos/chatbot.png" alt="chatbot" width="400"/>
-  <img src="backend/data/logos/1.png" alt="Logo" width="400"/>
   <img src="backend/data/logos/swarm.png" alt="swarm" width="400"/>
+  <img src="backend/data/logos/1.png" alt="Logo" width="400"/>
 </p>
 
 # Asistente Médico Virtual con IA

@@ -1,89 +1,133 @@
-<p align="center">
-  <img src="backend/data/logos/chatbot.png" alt="chatbot" width="400"/>
-  <img src="backend/data/logos/1.png" alt="Logo" width="400"/>
-</p>
+# Medical AI Assistant (SWARM of Agents)
 
-# SWARM de Agentes para Asistencia Médica con Inteligencia Artificial
+This repository implements a **multi-agent AI system** designed to assist medical professionals with diagnostic workflows, image analysis, patient data retrieval, and automatic report generation. Built around a Strands-style orchestration of specialized agents, the project demonstrates end-to-end integration of machine learning, natural language, and web technologies.
 
-[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+---
 
-## Descripción
+## 🚀 Project Overview
 
-Este proyecto desarrolla un asistente virtual avanzado para profesionales médicos, diseñado para optimizar el flujo de trabajo clínico y apoyar en el diagnóstico y la gestión de información. La plataforma integra un chatbot, permitiendo una interacción fluida y natural.
+The platform orchestrates a collection of autonomous agents that collaborate to:
 
-## DEMO
-https://github.com/user-attachments/assets/523f0122-d95d-48d9-86c2-e75c922c4a6d
+1. **Classify MRI images** for tumor likelihood using a DenseNet-121 based neural network.
+2. **Segment detected tumors** with a U‑Net model to delineate affected regions.
+3. **Retrieve patient history** and context through a Retrieval‑Augmented Generation (RAG) agent backed by ChromaDB.
+4. **Perform clinical triage**, estimating urgency based on image analysis and retrieved data.
+5. **Generate structured reports** in PDF format summarizing the entire workflow.
+6. **Validate the produced reports** before finalization.
 
+A lightweight React frontend provides a user interface for clinicians, while a FastAPI backend powers the agent infrastructure and exposes REST endpoints.
 
+---
 
-### Funcionalidades Clave
-
-- **Agente Clasificador:** Red neuronal encargada de estimar la probabilidad de tumor para un MRI.
-- **Agente Segmentador:** Red neuronal encargada de realizar la segmentación del tumor detectado en la imagen.
-- **Agente RAG (Retrieval Augmented Generation):** Acceso rápido y contextualizado a una base de datos de pacientes para obtener información especializada sobre su caso.
-- **Agente Triaje:** Evaluación y triaje para establecer urgencia del caso clínico en virtud de la información recuperada y el análisis de las imágenes MRI.
-- **Agente Orquestador:** Coordinación de todo el proceso en base a los requerimientos del médico.
-- **Agente Planificador:** Planificación de todo el flujo de trabajo y organización de agentes en base a las órdenes del orquestador.
-- **Agente Reportador:** Generación de documentación de todo el proceso y un informe final en formato PDF.
-- **Agente Validador:** Comprobación y verificación del reporte generado.
-
-## Estructura del Proyecto
+## 🗂️ Repository Structure
 
 ```
-.
-├── backend/
+/
+├── backend/                 # FastAPI server and agent implementation
 │   ├── Dockerfile
-│   ├── main.py
+│   ├── main.py              # entry point for local/production use
 │   ├── requirements.txt
 │   └── src/
-│       ├── agents/
-│       ├── config/
-│       └── tools/
-├── frontend/
+│       ├── agents/          # individual agent classes (classification, segmentation, etc.)
+│       ├── config/          # settings and prompt templates
+│       └── tools/           # utility modules (image processing, RAG, PDF generation)
+├── frontend/                # React + Vite UI
 │   ├── Dockerfile
 │   ├── package.json
 │   └── src/
-│       ├── components/
-│       ├── assets/
-│       └── context/
-├── docker-compose.yml
-├── README.md
-└── swarm_strands.ipynb
+│       ├── components/      # React components (sidebar, workflow, reports)
+│       ├── assets/          # static assets and helper scripts
+│       └── context/         # React context for global state
+├── docker-compose.yml       # orchestrates backend + frontend containers
+└── swarm_strands.ipynb      # notebook with experiments and agent examples
 ```
 
-## Componentes Tecnológicos
+---
 
-- **Backend:** Python, FastAPI, Strands Agents, ChromaDB.
-- **Frontend:** React, Vite.
-- **Contenerización:** Docker, Docker Compose.
-- **Modelos de IA:** OpenAI y finetuning sobre DenseNet-121 y U-Net.
+## 💻 Technologies Used
 
-## Instalación y Uso
+| Layer       | Technologies                            |
+|-------------|-----------------------------------------|
+| Backend     | Python 3.11, FastAPI, Strands Agents   |
+| Database    | ChromaDB (SQLite)                      |
+| ML Models   | OpenAI API, DenseNet‑121, U‑Net        |
+| Frontend    | React 18, Vite                         |
+| Container   | Docker, Docker Compose                 |
 
-### Prerrequisitos
+---
 
-- Docker instalado.
-- Git para clonar el repositorio.
+## 🔧 Prerequisites
 
-### Pasos
+- Docker Engine & Docker Compose
+- Git (for cloning the repo)
+- An OpenAI API key (stored in environment variables)
 
-1.  **Clonar el repositorio:**
-    ```bash
-    git clone https://github.com/tu_usuario/tu_repositorio.git
-    cd tu_repositorio
-    ```
+---
 
-2.  **Configurar variables de entorno:**
-    - Crear un archivo `.env` backend/ y añadir las claves de API necesarias (ej. `OPENAI_API_KEY`).
+## 🛠️ Setup and Running
 
-3.  **Levantar los servicios con Docker Compose:**
-    ```bash
-    docker-compose up -d --build
-    ```
+1. **Clone the repository**
 
-4.  **Acceder a la aplicación:**
-    - **Frontend:** `http://localhost:3000`
-    - **Backend (API Docs):** `http://localhost:8000`
+   ```bash
+   git clone https://github.com/your_username/your_repo.git
+   cd your_repo
+   ```
+
+2. **Environment configuration**
+
+   Create a `.env` file inside the `backend/` directory containing:
+   ```env
+   OPENAI_API_KEY=your_api_key_here
+   OTHER_OPTIONAL_SETTINGS=...
+   ```
+
+3. **Build and start services**
+
+   ```bash
+   docker-compose up -d --build
+   ```
+
+4. **Access the system**
+
+   - Frontend UI:  `http://localhost:3000`
+   - Backend API docs (Swagger):  `http://localhost:8000/docs`
+
+---
+
+## 🧠 Workflow Summary
+
+1. A clinician uploads MRI scans via the frontend.
+2. The backend invokes the **classification agent** to evaluate tumour probability.
+3. If positive, the **segmentation agent** processes the images.
+4. The **RAG agent** fetches relevant patient documents from the embedded ChromaDB corpus.
+5. **Orchestrator and planner agents** coordinate the above steps and trigger the **triage agent**.
+6. Once all sub‑tasks complete, the **report agent** generates a consolidated PDF.
+7. The **validator agent** checks consistency before the report is delivered to the user.
+
+---
+
+## 📁 Important Files
+
+- `backend/src/agents/*.py` – implementations of each agent
+- `backend/src/tools/` – shared utilities (image and file handling)
+- `frontend/src/components/` – React components forming the UI
+- `docker-compose.yml` – container definitions
+- `swarm_strands.ipynb` – exploratory notebook showcasing agent interactions
+
+---
+
+## 📦 Customization and Development
+
+- Add new agents under `backend/src/agents` following the existing base‑class pattern.
+- Update prompts in `backend/src/config/prompts.py` for model behavior tuning.
+- Use the notebook to experiment with agent sequences and dataset ingestion.
+
+---
+
+## 📄 License & Attribution
+
+[Specify license here, e.g. MIT] — please replace this section with your project’s license details.
+
+---
+
+> ⚠️ **Note:** This is an experimental project intended for research and internal use. Medical applications should undergo rigorous validation before deployment.

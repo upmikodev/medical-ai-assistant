@@ -1,6 +1,6 @@
 # Medical AI Assistant (SWARM of Agents)
 
-This repository implements a **multi-agent AI system** designed to assist medical professionals with diagnostic workflows, image analysis, patient data retrieval, and automatic report generation. Built around a Strands-style orchestration of specialized agents, the project demonstrates end-to-end integration of machine learning, natural language, and web technologies.
+A multi-agent AI platform for medical imaging diagnostics—integrating tumor classification, segmentation, RAG-powered patient data retrieval, and automated report generation via a FastAPI backend and React frontend.
 
 ---
 
@@ -124,10 +124,4 @@ A lightweight React frontend provides a user interface for clinicians, while a F
 
 ---
 
-## 📄 License & Attribution
 
-[Specify license here, e.g. MIT] — please replace this section with your project’s license details.
-
----
-
-> ⚠️ **Note:** This is an experimental project intended for research and internal use. Medical applications should undergo rigorous validation before deployment.

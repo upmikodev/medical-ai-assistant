@@ -14,6 +14,13 @@
 
 Este proyecto desarrolla un asistente virtual avanzado para profesionales médicos, diseñado para optimizar el flujo de trabajo clínico y apoyar en el diagnóstico y la gestión de información. La plataforma integra un chatbot, permitiendo una interacción fluida y natural.
 
+## DEMO
+<video width="400" controls>
+  <source src="backend/data/logs/demo.mp4" type="video/mp4">
+  Tu navegador no soporta la reproducción de videos.
+</video>
+
+
 ### Funcionalidades Clave
 
 - **Agente Clasificador:** Red neuronal encargada de estimar la probabilidad de tumor para un MRI.
